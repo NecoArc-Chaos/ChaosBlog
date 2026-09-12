@@ -4,7 +4,7 @@
  * 配置管行为与连接信息，脚本 `scripts/memos/sync-moments.mjs` 消费它，
  * 在构建期把 Memos API 的动态物化为 `src/content/moments/*.md`。
  */
-export type MemosImagePolicy = "remote" | "local";
+export type MemosImagePolicy = "remote" | "local" | undefined;
 
 export type MemosConfig = {
 	/** 是否在构建期从 Memos API 同步动态 */

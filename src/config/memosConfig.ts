@@ -1,4 +1,8 @@
-import type { MemosConfig, ResolvedMemosOptions } from "../types/memosConfig";
+import type {
+	MemosConfig,
+	MemosImagePolicy,
+	ResolvedMemosOptions,
+} from "../types/memosConfig";
 import { withUserConfig } from "../utils/config-overlay.ts";
 
 /**
@@ -54,7 +58,7 @@ const VALID_IMAGE_POLICIES = new Set(["remote", "local"]);
 const SAFE_FILENAME_PATTERN = /^[a-zA-Z0-9._-]+$/;
 
 /** 环境变量优先，便于在不同部署环境覆盖端点与令牌。 */
-function readEnvString(name) {
+function readEnvString(name: string): string {
 	const value = process.env[name];
 	return typeof value === "string" && value.trim() !== "" ? value.trim() : "";
 }
