@@ -5,6 +5,7 @@ published: 2026-04-25
 tags: [月姬R, 教程, NS模拟器]
 category: 教程
 draft: false
+image: ./cover.jpg
 pinned: true
 ---
 
