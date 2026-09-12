@@ -1,0 +1,41 @@
+# 定时重建：让 Memos 上的新动态通过一次重新构建出现在站点上。
+#
+# 前置条件（只需一次）：
+#   1. Vercel 项目 → Settings → Git → Deploy Hooks，创建一个 hook（分支填 main）；
+#   2. 复制生成的 URL，存为本仓库的 Actions Secret：VERCEL_DEPLOY_HOOK
+#      （Settings → Secrets and variables → Actions → New repository secret）。
+#
+# 未配置该 Secret 时，本工作流会输出提示并正常结束，不会标红。
+
+name: Refresh moments
+
+on:
+  schedule:
+    # 每天 04:17 UTC（北京时间 12:17）重建一次，兜住新增动态
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trigger-rebuild:
+    name: Trigger site rebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        env:
+          DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "::notice::未配置 VERCEL_DEPLOY_HOOK，跳过自动重建。详见 docs/memos-sync.md"
+            exit 0
+          fi
+          status=$(curl -sS -o /tmp/hook-response.txt -w '%{http_code}' \
+            -X POST "$DEPLOY_HOOK")
+          echo "Deploy hook 响应码：$status"
+          if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
+            echo "::error::部署钩子调用失败，响应：$(cat /tmp/hook-response.txt)"
+            exit 1
+          fi
+          echo "已触发重建，Memos 上的新动态将在构建完成后上线。"

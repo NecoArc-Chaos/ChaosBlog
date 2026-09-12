@@ -1,5 +1,22 @@
-# 依赖更新策略：禁用自动更新。
-# 本站为个人博客，主题（Shirone）依赖随上游同步升级，避免 Dependabot
-# 单独升级子依赖（如 katex）破坏主题的版本一致性约束。
 version: 2
-updates: []
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    groups:
+      patch-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+      minor-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+    pull-request-branch-name:
+      separator: "-"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
