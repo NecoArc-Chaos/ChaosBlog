@@ -108,7 +108,7 @@ export const LinkPresets: Record<string, NavBarLink> = {
 	},
 	GitHub: {
 		name: "GitHub",
-		url: "https://github.com/LyraVoid/Shirone",
+		url: "https://github.com/NecoArc-Chaos",
 		icon: "fa6-brands:github",
 		external: true,
 		pageKey: "github",
@@ -122,7 +122,6 @@ const defaultNavBarConfig: NavBarConfig = {
 		LinkPresets.Friends,
 		LinkPresets.Moments,
 		LinkPresets.Anime,
-		LinkPresets.Compass,
 		LinkPresets.Albums,
 		{
 			name: i18n(I18nKey.more),
@@ -138,6 +137,13 @@ const defaultNavBarConfig: NavBarConfig = {
 				// LinkPresets.Tags,
 				LinkPresets.About,
 				LinkPresets.GitHub,
+				{
+					name: "Bilibili",
+					url: "https://space.bilibili.com/1823717804",
+					icon: "fa6-brands:bilibili",
+					external: true,
+					pageKey: "bilibili",
+				},
 			],
 		},
 	],

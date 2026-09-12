@@ -7,7 +7,7 @@ description: "A comprehensive guide to post authoring, frontmatter schema, Markd
 image: "./cover.jpeg"
 tags: ["Shirone", "Guide", "Markdown", "M3E", "Blogging"]
 category: Guides
-draft: false
+draft: true
 ---
 
 Welcome to **Shirone** (白音) — an expressive, anime-inspired blog theme crafted around **Astro 7**, **Svelte 5**, and the **Material 3 Expressive (M3E)** design system.
@@ -54,7 +54,7 @@ description: "A deep dive into dynamic HCT color science and fluid transitions i
 image: "./cover.webp"
 tags: [M3E, Design, Frontend]
 category: Guides
-draft: false
+draft: true
 comment: true
 ---
 ```

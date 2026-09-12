@@ -8,14 +8,17 @@ import { withUserConfig } from "../utils/config-overlay.ts";
 export const announcementConfig: AnnouncementConfig = withUserConfig(
 	"announcement",
 	{
-		title: "", // 公告标题，填空使用 i18n 字符串 Key.announcement
-		content: "The only way to do great work is to love what you do", // 公告内容
-		closable: true, // 允许用户关闭公告
+		title: "Coming Posts & Note", // 公告标题，填空使用 i18n 字符串 Key.announcement
+		content: `1.Gal杂谈
+2.关于《朝圣》
+3.关于本站
+4.#鸽鸽鸽鸽鸽`, // 公告内容
+		closable: false, // 允许用户关闭公告
 		link: {
-			enable: true, // 启用链接
-			text: "GitHub", // 链接文本
-			url: "https://github.com", // 链接 URL
-			external: true, // 外部链接
+			enable: false, // 启用链接
+			text: "Learn More", // 链接文本
+			url: "/about/", // 链接 URL
+			external: false, // 外部链接
 		},
 	},
 );

@@ -63,10 +63,10 @@ describe("Feature Data & Resolver Tests", () => {
 		const config = {
 			enable: true,
 			categories: [],
-			disabledIds: ["iphone-16-pro"],
+			disabledIds: ["pixel-3"],
 		};
 		const resolved = resolveDevicesData(config);
-		assert.ok(resolved.some((d) => d.id === "macbook-pro-16"));
-		assert.ok(!resolved.some((d) => d.id === "iphone-16-pro"));
+		assert.ok(resolved.some((d) => d.id === "realme-gt6"));
+		assert.ok(!resolved.some((d) => d.id === "pixel-3"));
 	});
 });

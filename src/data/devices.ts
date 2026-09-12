@@ -1,76 +1,58 @@
 /**
  * 设备展示页数据源（纯内容）。
  * 页面展示与筛选规则由 src/config/devicesConfig.ts 控制。
+ * 从 Mizuki 迁移：realme GT6 / Pixel 3 / Pixel Watch 3 / insta360 GO 3S
  */
 import type { DeviceItem } from "@/types/devicesConfig";
 
 export const devicesData: DeviceItem[] = [
 	{
-		id: "macbook-pro-16",
-		name: 'MacBook Pro 16"',
-		brand: "Apple",
-		category: "desk",
-		status: "active",
-		specs: "M3 Max / 64GB / 2TB",
-		description:
-			"Primary workstation for development, design, and heavy rendering workloads.",
-		icon: "material-symbols:laptop-mac-rounded",
-		featured: true,
-		year: "2024",
-		link: "https://www.apple.com/macbook-pro/",
-	},
-	{
-		id: "iphone-16-pro",
-		name: "iPhone 16 Pro",
-		brand: "Apple",
+		id: "realme-gt6",
+		name: "realme GT6",
+		brand: "realme",
 		category: "mobile",
 		status: "active",
-		specs: "Natural Titanium / 256GB",
-		description:
-			"Daily driver smartphone with outstanding cameras and a smooth 120Hz ProMotion display.",
-		icon: "material-symbols:phone-iphone",
+		specs: "骁龙8gen3 / 16G + 512GB",
+		description: "5800mhA Battery, 120W SuperVOOC.",
+		image: "/images/device/realmegt6.png",
 		featured: true,
-		year: "2024",
+		link: "https://www.realme.com/cn/realme-gt-6",
 	},
 	{
-		id: "sony-wh1000xm5",
-		name: "Sony WH-1000XM5",
-		brand: "Sony",
-		category: "audio",
-		status: "active",
-		specs: "Silver / ANC / LDAC",
-		description:
-			"Industry-leading noise-canceling headphones for immersive coding sessions and travels.",
-		icon: "material-symbols:headphones-rounded",
-		year: "2023",
-	},
-	{
-		id: "custom-keyboard-75",
-		name: "Custom 75% Mechanical Keyboard",
-		brand: "Custom",
-		category: "peripheral",
-		status: "active",
-		specs: "Anodized Aluminum / Linear Switches",
-		description:
-			"Custom gasket-mounted keyboard tuned for deep, quiet typing acoustics.",
-		icon: "material-symbols:keyboard-outline-rounded",
-		year: "2025",
-	},
-	{
-		id: "ipad-pro-11",
-		name: 'iPad Pro 11"',
-		brand: "Apple",
+		id: "pixel-3",
+		name: "Pixel 3",
+		brand: "Google",
 		category: "mobile",
 		status: "backup",
-		specs: "Space Gray / 128GB",
+		specs: "骁龙845 / 4+64 / oled屏幕 / 线性马达",
+		description: "闲鱼花220淘的，pixelos牛福",
+		image:
+			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbOj33XAZiQn1DtNLdEcfEgYmaUPU3b_x3oz2v4t8Thw&s=10",
+		link: "https://zh.wikipedia.org/wiki/Pixel_3",
+	},
+	{
+		id: "pixel-watch-3",
+		name: "Pixel Watch 3",
+		brand: "Google",
+		category: "mobile",
+		status: "active",
+		specs: "Wifi / 45mm / 美版",
 		description:
-			"Secondary mobile screen and digital notepad for sketching ideas and reading papers.",
-		icon: "material-symbols:tablet-mac-rounded",
-		year: "2021",
+			"Pixel Watch 3 的錶徑有45 公釐，螢幕較前一代大40% 以上，無論是運動、使用地圖或處理其他事務，一眼就能掌握更豐富的資訊.",
+		image:
+			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKjYPaNFIYJEXKN7-tYU9u5PQ5slBMfl8RaV1LbjSifg&s=10",
+		featured: true,
+		link: "https://www.google-mobile.cn/?product=pixel-watch-3",
+	},
+	{
+		id: "insta360-go-3s",
+		name: "insta360 GO 3S",
+		brand: "Insta360",
+		category: "audio",
+		status: "active",
+		specs: "4K,128G,39g(本体)",
+		description: "拇指相机，要便携有便携，要续航有便携",
+		image: "/images/device/insta360go3s.png",
+		link: "https://www.insta360.com/product/insta360-go3s",
 	},
 ];
-
-/** 获取所有设备数据列表 */
-export function getDevicesList(): DeviceItem[] {
-	return devicesData;
-}

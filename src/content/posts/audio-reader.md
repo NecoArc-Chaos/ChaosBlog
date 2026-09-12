@@ -4,7 +4,7 @@ published: 2026-08-29
 description: A small collection of mysterious Japanese anime voice fragments, played on demand with Audio Reader.
 tags: [Example, Audio Reader]
 category: Examples
-draft: false
+draft: true
 ---
 
 These short Japanese voice fragments feel as though they were picked up from the edge of an anime scene: a teasing call, a bright greeting, a tiny laugh, and a few lines with no clear origin. They are mood samples rather than dialogue transcripts, so let the sound carry the meaning.
