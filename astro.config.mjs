@@ -242,7 +242,10 @@ export default defineConfig({
 				warningFilter: () => !isDevCommand,
 			},
 		}),
-		sitemap(),
+		sitemap({
+			// 个人站不向搜索引擎暴露主题开发文档页
+			filter: (page) => !page.endsWith("/AGENTS/"),
+		}),
 		mdx({
 			syntaxHighlight: false,
 			optimize: true,
