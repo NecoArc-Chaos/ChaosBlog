@@ -13,7 +13,7 @@
 
 Banner 画师：[Va-11_Hall-A Glitch City（Pixiv 93080601）](https://www.pixiv.net/artworks/93080601)
 
-正在听  ：
+正在听 ：
 
 <img
   data-sp-theme
@@ -24,9 +24,6 @@ Banner 画师：[Va-11_Hall-A Glitch City（Pixiv 93080601）](https://www.pixiv
   height="160"
   style="max-width: 100%; height: auto; border-radius: 12px;"
 />
-
-日记树屋入口  
-https://memos.nachaos.xyz
 
 一点冷知识：  
 网站的制作部署仅一部安卓手机使用以下软件完成  

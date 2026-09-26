@@ -42,13 +42,13 @@ import { withUserConfig } from "../utils/config-overlay.ts";
  *    - 特点：首屏立即可播本地音乐，后台无感拉取远端歌单并在就绪后无缝扩容；
  *            若遇断网或云端接口故障，自动静默降级为本地曲目播放，绝不报红破版。
  *    - 示例：
- *      provider: "mixed",
+ *      provider: "local",
  *      meting: { server: "netease", type: "playlist", id: "14164869977" }
  * ─────────────────────────────────────────────────────────────────────────────
  */
 export const musicConfig: MusicConfig = withUserConfig("music", {
 	enable: true,
-	provider: "mixed",
+	provider: "local",
 	// tracks: [
 	// 	{
 	// 		id: "custom-1",
@@ -59,11 +59,6 @@ export const musicConfig: MusicConfig = withUserConfig("music", {
 	// 		duration: 240,
 	// 	},
 	// ],
-	meting: {
-		server: "netease",
-		type: "playlist",
-		id: "14164869977",
-	},
 	defaultVolume: 0.7,
 	defaultMode: "sequence",
 });
@@ -153,7 +148,7 @@ export function resolveMusicOptions(
 		const metingId = config.meting?.id?.trim();
 		if (playlist.length === 0 && !metingId) return null;
 		return Object.freeze({
-			provider: "mixed",
+			provider: "local",
 			playlist: Object.freeze(playlist),
 			meting: config.meting,
 			defaultVolume: clampMusicVolume(config.defaultVolume),
