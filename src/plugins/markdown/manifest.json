@@ -145,10 +145,7 @@
 				"modules": ["src/utils/abbreviations.ts"],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/markdown-abbreviations.md",
-				"docs/markdown-extensions.md"
-			],
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": [
 				"tests/plugins/markdown/inline/abbreviations.test.mjs",
 				"tests/site/abbreviations.spec.ts"
@@ -163,7 +160,7 @@
 		{
 			"id": "acfun",
 			"name": "AcFun Video",
-			"status": "stable",
+			"status": "legacy",
 			"category": "leaf-directive",
 			"source": "shirone",
 			"summary": "将受限 AcFun 视频 ID 渲染为可访问的 SSR 视频 facade，并在接近视口时预加载或由点击加载 AcFun 播放器。",
@@ -210,14 +207,15 @@
 					"viewport preloading or explicit activation: https://www.acfun.cn/player/{acid}"
 				]
 			},
-			"docs": ["src/content/posts/video.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/leaf/acfun.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
 			],
 			"notes": [
 				"初始 SSR DOM 不含 iframe、AcFun 脚本或 provider 请求；标题和 AcFun 页面链接始终保留。",
-				"非法视频 ID 或空标题不触发可选资源；运行时只从验证后的字段生成白名单播放器 URL。"
+				"非法视频 ID 或空标题不触发可选资源；运行时只从验证后的字段生成白名单播放器 URL。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		},
 		{
@@ -272,10 +270,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/admonitions.md",
-				"docs/markdown-extensions.md"
-			],
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": [
 				"tests/plugins/markdown/containers/admonitions.test.mjs",
 				"tests/site/admonitions.spec.ts"
@@ -288,7 +283,7 @@
 		{
 			"id": "artplayer",
 			"name": "ArtPlayer Video",
-			"status": "stable",
+			"status": "legacy",
 			"category": "leaf-directive",
 			"source": "shirone",
 			"summary": "Renders a validated video source as an accessible SSR native video player without a client-side player dependency.",
@@ -335,14 +330,15 @@
 					"author-declared video source; preload accepts none or auto"
 				]
 			},
-			"docs": ["src/content/posts/video.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/leaf/artplayer.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
 			],
 			"notes": [
 				"The initial output uses native SSR video controls; preload defaults to none and auto prepares the source near the viewport without an ArtPlayer package or client module.",
-				"Invalid source or title values remain ordinary Markdown and do not declare optional page resources."
+				"Invalid source or title values remain ordinary Markdown and do not declare optional page resources.",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		},
 		{
@@ -388,10 +384,7 @@
 					"author-declared audio source only after activation; preload=none"
 				]
 			},
-			"docs": [
-				"src/content/posts/audio-reader.md",
-				".agents/skills/shirone-markdown-syntax/SKILL.md"
-			],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/inline/audio-reader.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
@@ -404,7 +397,7 @@
 		{
 			"id": "bilibili",
 			"name": "Bilibili Video",
-			"status": "stable",
+			"status": "legacy",
 			"category": "leaf-directive",
 			"source": "shirone",
 			"summary": "将受限 BV 号渲染为可访问的 SSR 视频 facade，并在接近视口时预加载或由点击加载 Bilibili 播放器。",
@@ -457,20 +450,21 @@
 					"viewport preloading or explicit activation: https://player.bilibili.com/player.html?bvid={bvid}&p={p}&high_quality=1&danmaku=0"
 				]
 			},
-			"docs": ["src/content/posts/video.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/leaf/bilibili.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
 			],
 			"notes": [
 				"初始 SSR DOM 不含 iframe、Bilibili 脚本或 provider 请求；标题和 Bilibili 页面链接始终保留。",
-				"非法 BV 号、空标题或非法分 P 不触发可选资源；运行时只从验证后的字段生成白名单播放器 URL。"
+				"非法 BV 号、空标题或非法分 P 不触发可选资源；运行时只从验证后的字段生成白名单播放器 URL。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		},
 		{
 			"id": "code-tree",
 			"name": "Code Tree",
-			"status": "stable",
+			"status": "legacy",
 			"category": "container",
 			"source": "shirone",
 			"summary": "将多文件代码示例或本地目录渲染为可折叠目录导航与可切换代码面板。",
@@ -530,13 +524,14 @@
 				"modules": ["src/utils/code-tree.ts"],
 				"network": []
 			},
-			"docs": ["src/content/posts/markdown-enhancements.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/containers/code-tree.test.mjs",
 				"tests/site/code-tree.spec.ts"
 			],
 			"notes": [
-				"本地目录导入限制在工作区根目录内，以 UTF-8 读取文件，并忽略隐藏目录、依赖目录、构建目录及大于 256KB 的文件。"
+				"本地目录导入限制在工作区根目录内，以 UTF-8 读取文件，并忽略隐藏目录、依赖目录、构建目录及大于 256KB 的文件。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		},
 		{
@@ -593,10 +588,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/collapse-panels.md",
-				"docs/markdown-extensions.md"
-			],
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": [
 				"tests/plugins/markdown/containers/collapse-panels.test.mjs",
 				"tests/plugins/markdown/core/disclosure.test.mjs",
@@ -611,7 +603,7 @@
 		{
 			"id": "content-annotation",
 			"name": "Content Annotation",
-			"status": "stable",
+			"status": "legacy",
 			"category": "inline-extension",
 			"source": "shirone",
 			"summary": "通过行内标签引用文章内集中定义的补充说明，并使用原生 Popover 在需要时显示内容。",
@@ -643,7 +635,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": ["src/content/posts/content-annotations.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/inline/content-annotations.test.mjs",
 				"tests/site/content-annotations.spec.ts"
@@ -651,13 +643,14 @@
 			"notes": [
 				"未定义、非法、链接内或代码内的引用保持原文；同一标签可累积多条定义；引用可与正文粗体等标准 Markdown 行内语法相邻组合。",
 				"定义仅在当前 Markdown 文档内生效；功能不读取全局配置，不增加客户端模块或外部请求。",
-				"桌面与手机端均优先锚定到对应引用，空间不足时翻转；不使用手机端固定底部面板。"
+				"桌面与手机端均优先锚定到对应引用，空间不足时翻转；不使用手机端固定底部面板。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		},
 		{
 			"id": "expressive-code",
 			"name": "Expressive Code fence metadata",
-			"status": "stable",
+			"status": "legacy",
 			"category": "fence-meta",
 			"source": "integration",
 			"summary": "为 fenced code block 提供标题、frame、行/文本标记、换行、折叠和行号元数据。",
@@ -735,9 +728,12 @@
 				"modules": ["src/utils/code-copy.ts", "src/utils/code-collapse.ts"],
 				"network": []
 			},
-			"docs": ["src/content/posts/expressive-code.md"],
+			"docs": [],
 			"tests": ["tests/site/post-encryption.spec.ts"],
-			"notes": ["元数据具体解析规则由 Expressive Code 及已注册插件定义。"]
+			"notes": [
+				"元数据具体解析规则由 Expressive Code 及已注册插件定义。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
+			]
 		},
 		{
 			"id": "fields",
@@ -785,11 +781,12 @@
 			],
 			"registeredIn": "src/utils/markdown-processor.mjs",
 			"styles": ["src/styles/markdown/fields.css"],
-			"runtime": { "mode": "none", "modules": [], "network": [] },
-			"docs": [
-				"src/content/posts/markdown-fields.md",
-				"docs/markdown-extensions.md"
-			],
+			"runtime": {
+				"mode": "none",
+				"modules": [],
+				"network": []
+			},
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": ["tests/plugins/markdown/containers/fields.test.mjs"],
 			"notes": [
 				"无效或不完整的字段标签保留为可读 Markdown；组件为纯 SSR 输出，不增加客户端运行时。"
@@ -844,10 +841,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/markdown-enhancements.md",
-				"docs/markdown-extensions.md"
-			],
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": [
 				"tests/plugins/markdown/containers/file-tree.test.mjs",
 				"tests/plugins/markdown/core/disclosure.test.mjs",
@@ -861,7 +855,7 @@
 		{
 			"id": "github-card",
 			"name": "GitHub Repository Card",
-			"status": "stable",
+			"status": "legacy",
 			"category": "leaf-directive",
 			"source": "shirone",
 			"summary": "根据 owner/repo 渲染可访问的仓库卡片，并按需读取 GitHub API 的仓库元数据。",
@@ -891,23 +885,21 @@
 					"avatar_url returned by the GitHub API"
 				]
 			},
-			"docs": [
-				"src/content/posts/markdown-extended.md",
-				"src/content/posts/guide/index.md"
-			],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/leaf/github-card.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
 			],
 			"notes": [
 				"SSR 始终输出可点击的 owner/repo 链接；命中语法后才动态加载元数据增强模块。",
-				"客户端读取 GitHub API 的描述、星标、分叉、许可证、语言和头像；请求失败时保留 SSR 链接。"
+				"客户端读取 GitHub API 的描述、星标、分叉、许可证、语言和头像；请求失败时保留 SSR 链接。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		},
 		{
 			"id": "image-grid",
 			"name": "Image Grid",
-			"status": "stable",
+			"status": "legacy",
 			"category": "container",
 			"source": "shirone",
 			"summary": "将容器内 Markdown 图片渲染为响应式画廊，并按容器隔离灯箱分组。",
@@ -946,12 +938,15 @@
 				"modules": ["src/utils/fancybox-handler.ts"],
 				"network": ["author-declared image URLs only"]
 			},
-			"docs": ["src/content/posts/image-grid-demo/index.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/image-grid.test.mjs",
 				"tests/site/image-grid.spec.ts"
 			],
-			"notes": ["容器至少包含一张 Markdown 图片；非图片子节点不会成为画廊项。"]
+			"notes": [
+				"容器至少包含一张 Markdown 图片；非图片子节点不会成为画廊项。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
+			]
 		},
 		{
 			"id": "image-presentation",
@@ -989,7 +984,7 @@
 				"modules": [],
 				"network": ["author-declared image URLs only"]
 			},
-			"docs": ["src/content/posts/spoilers.md", "docs/markdown-extensions.md"],
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": ["tests/plugins/rehype-markdown-images.test.mjs"],
 			"notes": ["非法或越界宽度令牌保留在 alt，不静默改写。"]
 		},
@@ -1039,10 +1034,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/markdown-includes.md",
-				"docs/markdown-extensions.md"
-			],
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": ["tests/plugins/markdown/inline/includes.test.mjs"],
 			"notes": [
 				"只处理独立一行且位于 fenced code 之外的注释；缺失、越界、未闭合或递归包含保留原注释。",
@@ -1088,10 +1080,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/marker-highlights.md",
-				"docs/markdown-extensions.md"
-			],
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": [
 				"tests/plugins/markdown/inline/markers.test.mjs",
 				"tests/site/markers.spec.ts"
@@ -1104,7 +1093,7 @@
 		{
 			"id": "math",
 			"name": "Math and KaTeX",
-			"status": "stable",
+			"status": "legacy",
 			"category": "inline-extension",
 			"source": "integration",
 			"summary": "使用美元符号定界的 LaTeX 数学表达式，并在构建期渲染为 KaTeX。",
@@ -1129,21 +1118,21 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/guide/index.md",
-				"src/content/posts/markdown.md"
-			],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/katex-version.test.mjs",
 				"tests/site/math.spec.ts",
 				"tests/site/post-encryption.spec.ts"
 			],
-			"notes": ["解析由 remark-math 与 rehype-katex 提供。"]
+			"notes": [
+				"解析由 remark-math 与 rehype-katex 提供。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
+			]
 		},
 		{
 			"id": "mermaid",
 			"name": "Mermaid Diagram",
-			"status": "stable",
+			"status": "legacy",
 			"category": "fence",
 			"source": "integration",
 			"summary": "将 mermaid fenced code 保留为可读 fallback，并在客户端按需增强为主题化 SVG。",
@@ -1163,13 +1152,11 @@
 				"modules": ["src/utils/mermaid.ts", "src/utils/mermaid-interaction.ts"],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/markdown-mermaid.md",
-				"src/content/posts/guide/index.md"
-			],
+			"docs": [],
 			"tests": ["tests/site/mermaid.spec.ts"],
 			"notes": [
-				"客户端脚本与样式仅在页面含 Mermaid 语法时按需加载；初始化必须覆盖直接加载、Swup、主题变化和文章解密。"
+				"客户端脚本与样式仅在页面含 Mermaid 语法时按需加载；初始化必须覆盖直接加载、Swup、主题变化和文章解密。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		},
 		{
@@ -1217,10 +1204,7 @@
 				"modules": ["src/utils/option-groups.ts"],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/option-groups.md",
-				"docs/markdown-extensions.md"
-			],
+			"docs": ["docs/markdown-extensions.md"],
 			"tests": [
 				"tests/plugins/markdown/containers/option-groups.test.mjs",
 				"tests/site/option-groups.spec.ts"
@@ -1234,7 +1218,7 @@
 		{
 			"id": "spoiler",
 			"name": "Inline Spoiler",
-			"status": "stable",
+			"status": "legacy",
 			"category": "text-directive",
 			"source": "shirone",
 			"summary": "将 text directive 输出为 spoiler 自定义元素并使用 CSS 隐藏内容。",
@@ -1254,17 +1238,20 @@
 				"modules": ["src/utils/spoilers.ts"],
 				"network": []
 			},
-			"docs": ["src/content/posts/markdown-extended.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/inline/spoilers.test.mjs",
 				"tests/site/spoilers.spec.ts"
 			],
-			"notes": ["保留兼容；缺少触屏与键盘契约，不作为新行内语法样板。"]
+			"notes": [
+				"保留兼容；缺少触屏与键盘契约，不作为新行内语法样板。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
+			]
 		},
 		{
 			"id": "steps",
 			"name": "Steps",
-			"status": "stable",
+			"status": "legacy",
 			"category": "container",
 			"source": "shirone",
 			"summary": "将单个有序列表增强为无外框的序号导轨步骤流，非法或混合输入保留为普通 Markdown。",
@@ -1302,19 +1289,20 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": ["src/content/posts/steps.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/containers/steps.test.mjs",
 				"tests/site/steps.spec.ts"
 			],
 			"notes": [
-				"容器只接受一个有序列表；视觉序号附带 aria-hidden，原始 ol/li 语义保留，纯 SSR 输出且零客户端 JavaScript 负担。"
+				"容器只接受一个有序列表；视觉序号附带 aria-hidden，原始 ol/li 语义保留，纯 SSR 输出且零客户端 JavaScript 负担。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		},
 		{
 			"id": "youtube",
 			"name": "YouTube Video",
-			"status": "stable",
+			"status": "legacy",
 			"category": "leaf-directive",
 			"source": "shirone",
 			"summary": "将受限 YouTube 视频 ID 渲染为可访问的 SSR 视频 facade，并在接近视口时预加载或由点击加载 privacy-enhanced 播放器。",
@@ -1361,14 +1349,15 @@
 					"viewport preloading or explicit activation: https://www.youtube-nocookie.com/embed/{id}?rel=0&modestbranding=1"
 				]
 			},
-			"docs": ["src/content/posts/video.md"],
+			"docs": [],
 			"tests": [
 				"tests/plugins/markdown/leaf/youtube.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
 			],
 			"notes": [
 				"初始 SSR DOM 不含 iframe、YouTube 脚本或 provider 请求；标题和 YouTube 页面链接始终保留。",
-				"非法视频 ID 或空标题不触发可选资源；运行时只从验证后的字段生成白名单播放器 URL。"
+				"非法视频 ID 或空标题不触发可选资源；运行时只从验证后的字段生成白名单播放器 URL。",
+				"Demo article removed from repository; syntax remains operational but has no reference doc."
 			]
 		}
 	]
