@@ -16,9 +16,9 @@ export const umamiConfig: UmamiConfig = withUserConfig("umami", {
 	shareUrl:
 		"https://cloud.umami.is/analytics/us/websites/7a4cc25b-2442-43db-a20c-21b005ea5074",
 	/** Umami Website ID；与 scriptUrl 同时填写时启用访问采集 */
-	websiteId: "",
+	websiteId: "7a4cc25b-2442-43db-a20c-21b005ea5074",
 	/** Umami 采集脚本 URL；与 websiteId 同时填写时启用访问采集 */
-	scriptUrl: "",
+	scriptUrl: "https://cloud.umami.is/script.js",
 });
 
 /**
