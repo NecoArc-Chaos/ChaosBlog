@@ -13,11 +13,11 @@ import type { UmamiConfig } from "@/types/umamiConfig";
 import { withUserConfig } from "../utils/config-overlay.ts";
 
 export const umamiConfig: UmamiConfig = withUserConfig("umami", {
-  enable: true,
-  shareUrl: "https://your-umami-instance.com/share/<shareId>",
-  // 可选：同时配置以下两项后，页面会加载官方 Umami 脚本采集访问数据。
-  websiteId: "your-website-id",
-  scriptUrl: "https://your-umami-instance.com/script.js",
+    enable: true,
+    shareUrl: "https://your-umami-instance.com/share/<shareId>",
+    // 可选：同时配置以下两项后，页面会加载官方 Umami 脚本采集访问数据。
+    websiteId: "your-website-id",
+    scriptUrl: "https://your-umami-instance.com/script.js",
 });
 ```
 
@@ -39,11 +39,13 @@ shareUrl: https://your-umami-instance.com/share/<shareId>
 ### 2. 获取分享链接
 
 在 Umami 后台：
+
 1. 进入 **Settings** → **Share URL**
 2. 创建新的分享链接
 3. 复制生成的 URL（格式如下）
 
 支持的 URL 格式：
+
 - `https://umami.example.com/share/<shareId>`
 - `https://cloud.umami.is/analytics/us/share/<shareId>`
 - `https://umami.example.com/analytics/share/<shareId>`
@@ -76,7 +78,7 @@ const live = await window.oddmisc.getActiveVisitors();
 
 // 就绪事件
 window.addEventListener("oddmisc-ready", (e) => {
-  e.detail.client.getSiteStats().then(console.log);
+    e.detail.client.getSiteStats().then(console.log);
 });
 ```
 
@@ -84,19 +86,19 @@ window.addEventListener("oddmisc-ready", (e) => {
 
 ```ts
 interface StatsResult {
-  pageviews: number;
-  visitors: number;
-  visits: number;
-  bounces?: number;
-  totaltime?: number;
-  comparison?: {
-    pageviews?: number;
-    visitors?: number;
-    visits?: number;
+    pageviews: number;
+    visitors: number;
+    visits: number;
     bounces?: number;
     totaltime?: number;
-  };
-  _fromCache?: boolean;
+    comparison?: {
+        pageviews?: number;
+        visitors?: number;
+        visits?: number;
+        bounces?: number;
+        totaltime?: number;
+    };
+    _fromCache?: boolean;
 }
 ```
 
@@ -122,16 +124,16 @@ interface StatsResult {
 import { createUmamiClient } from "oddmisc";
 
 const client = createUmamiClient({
-  shareUrl: "https://your-umami-instance.com/share/<shareId>",
+    shareUrl: "https://your-umami-instance.com/share/<shareId>",
 });
 
 const page = await client.getPageStats("/about");
 const site = await client.getSiteStats();
 const series = await client.getPageviews({
-  startAt: Date.now() - 24 * 3600_000,
-  endAt: Date.now(),
-  unit: "hour",
-  timezone: "Asia/Shanghai",
+    startAt: Date.now() - 24 * 3600_000,
+    endAt: Date.now(),
+    unit: "hour",
+    timezone: "Asia/Shanghai",
 });
 const topPaths = await client.getMetrics("path", { limit: 10 });
 ```

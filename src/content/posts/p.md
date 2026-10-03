@@ -1,7 +1,7 @@
 ---
-title: 关于《朝圣》
-published: 2026-01-18
-tags: [朝圣, 随笔, 个人,]
+title: 一篇随笔
+published: 2027-01-23
+tags: [随笔]
 category: 随心写
 draft: true
 ---
