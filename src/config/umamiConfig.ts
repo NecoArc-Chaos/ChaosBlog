@@ -10,32 +10,32 @@ import { withUserConfig } from "../utils/config-overlay.ts";
  * 详细用法见：`docs/umami-guide.md`
  */
 export const umamiConfig: UmamiConfig = withUserConfig("umami", {
-    /** 全局 Umami 统计总开关：false 时完全不加载 oddmisc 运行时脚本与 DOM */
-    enable: true,
-    /** Umami 分享链接（必填） */
-    shareUrl: "https://cloud.umami.is/share/HoqCgR6VMsvNCg3T",
-    /** Umami Website ID；与 scriptUrl 同时填写时启用访问采集 */
-    websiteId: "7a4cc25b-2442-43db-a20c-21b005ea5074",
-    /** Umami 采集脚本 URL；与 websiteId 同时填写时启用访问采集 */
-    scriptUrl: "https://cloud.umami.is/script.js",
+	/** 全局 Umami 统计总开关：false 时完全不加载 oddmisc 运行时脚本与 DOM */
+	enable: true,
+	/** Umami 分享链接（必填） */
+	shareUrl: "https://cloud.umami.is/analytics/us/share/HoqCgR6VMsvNCg3T",
+	/** Umami Website ID；与 scriptUrl 同时填写时启用访问采集 */
+	websiteId: "7a4cc25b-2442-43db-a20c-21b005ea5074",
+	/** Umami 采集脚本 URL；与 websiteId 同时填写时启用访问采集 */
+	scriptUrl: "https://cloud.umami.is/script.js",
 });
 
 /**
  * 解析并校验 Umami 配置。未启用或关键参数缺失时返回 null。
  */
 export function resolveUmamiOptions(config: UmamiConfig): ResolvedUmamiOptions {
-    if (!config.enable) {
-        return null;
-    }
-    const shareUrl = config.shareUrl?.trim();
-    if (!shareUrl) {
-        return null;
-    }
-    return {
-        shareUrl,
-        websiteId: config.websiteId?.trim() || undefined,
-        scriptUrl: config.scriptUrl?.trim() || undefined,
-    };
+	if (!config.enable) {
+		return null;
+	}
+	const shareUrl = config.shareUrl?.trim();
+	if (!shareUrl) {
+		return null;
+	}
+	return {
+		shareUrl,
+		websiteId: config.websiteId?.trim() || undefined,
+		scriptUrl: config.scriptUrl?.trim() || undefined,
+	};
 }
 
 export type { ResolvedUmamiOptions };
