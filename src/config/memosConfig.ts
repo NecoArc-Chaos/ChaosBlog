@@ -1,8 +1,4 @@
-import type {
-	MemosConfig,
-	MemosImagePolicy,
-	ResolvedMemosOptions,
-} from "../types/memosConfig";
+import type { MemosConfig, ResolvedMemosOptions } from "../types/memosConfig";
 import { withUserConfig } from "../utils/config-overlay.ts";
 
 /**

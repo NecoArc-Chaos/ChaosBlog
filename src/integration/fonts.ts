@@ -9,6 +9,8 @@ import {
 	writeFile,
 } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
+import { fontProviders } from "astro/config";
+import subsetFont from "subset-font";
 import type { MetingMusicConfig, MusicProvider } from "../types/musicConfig.ts";
 import { buildMetingUrl } from "../utils/music/meting.ts";
 import { loadConfigModule } from "./resolve/load-config.ts";
@@ -310,7 +312,7 @@ export async function runFontSubsetting(
 	await writeFile(join(outDir, "charset.txt"), charset, "utf8");
 	logger.info(`collected ${charset.length} unique characters`);
 
-	const { default: subsetFont } = await import("subset-font");
+	// subsetFont statically imported at top
 	const maxFamilyBytes = fontConfig.budget?.maxFamilyBytes ?? 4 * 1024 * 1024;
 
 	for (const variant of localVariants) {
@@ -416,7 +418,7 @@ export async function buildFontDeclarations(
 		));
 	}
 
-	const { fontProviders } = await import("astro/config");
+	// fontProviders statically imported at top
 	const declarations: unknown[] = [];
 
 	for (const role of ["body", "cjk", "mono"]) {

@@ -40,6 +40,16 @@ import { shironesIconRegeneration } from "./vite/icon/regeneration.ts";
 import { shironesOverlay } from "./vite/overlay.ts";
 import { shironesSsrNodeShims } from "./vite/ssr-node-shims.ts";
 import { shironesThumbnailsRegeneration } from "./vite/thumbnails/regeneration.ts";
+import tailwindcss from "@tailwindcss/vite";
+import swup from "@swup/astro";
+import expressiveCode from "astro-expressive-code";
+import svelte, { vitePreprocess } from "@astrojs/svelte";
+import sitemap from "@astrojs/sitemap";
+import mdx from "@astrojs/mdx";
+import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
+import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
+import { oddmisc } from "oddmisc/astro";
+import * as pagefind from "pagefind";
 
 export type {
 	ShironesFontOptions,
@@ -372,7 +382,7 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 							shironesThumbnailsRegeneration(paths),
 							shironesSsrNodeShims(),
 							createMusicSidebarPlugin(paths, musicEnabled),
-							(await import("@tailwindcss/vite")).default(),
+							tailwindcss(),
 						],
 						optimizeDeps: {
 							// Only pre-bundle what the *user's* project can actually
@@ -459,7 +469,7 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 				if (options.pagefind === false || paths.isThemeRepo) return;
 				const outDir = dir.pathname;
 				try {
-					const pagefind = await import("pagefind");
+					// pagefind statically imported at top
 					const { index } = await pagefind.createIndex({});
 					if (!index) throw new Error("Pagefind failed to create an index");
 					await index.addDirectory({ path: outDir });
@@ -522,25 +532,8 @@ async function createBundledIntegrations(
 	options: { umamiConfig: { shareUrl: string }; umamiEnabled: boolean },
 	registryRef?: { overrides: Map<string, string> },
 ) {
-	const [
-		{ default: swup },
-		{ default: expressiveCode },
-		{ default: svelte, vitePreprocess },
-		{ default: sitemap },
-		{ default: mdx },
-		{ pluginCollapsibleSections },
-		{ pluginLineNumbers },
-	] = await Promise.all([
-		import("@swup/astro"),
-		import("astro-expressive-code"),
-		import("@astrojs/svelte"),
-		import("@astrojs/sitemap"),
-		import("@astrojs/mdx"),
-		import("@expressive-code/plugin-collapsible-sections"),
-		import("@expressive-code/plugin-line-numbers"),
-	]);
 	const oddmiscIntegration = options.umamiEnabled
-		? (await import("oddmisc/astro")).oddmisc({
+		? oddmisc({
 				umami: {
 					shareUrl: options.umamiConfig.shareUrl,
 				},

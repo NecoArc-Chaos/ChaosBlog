@@ -9,6 +9,7 @@ import {
 } from "node:fs";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
+import { build } from "esbuild";
 import type { ResolvedShironesPaths } from "../types.ts";
 import { normalisePath } from "./paths.ts";
 import {
@@ -185,6 +186,11 @@ function outputDir(paths: ResolvedShironesPaths): string {
 /**
  * Bundle `entry` (applying user overrides) and import the result.
  */
+const nativeDynamicImport = new Function(
+	"specifier",
+	"return import(specifier)",
+);
+
 export async function loadModuleFile(
 	paths: ResolvedShironesPaths,
 	entry: string,
@@ -194,7 +200,7 @@ export async function loadModuleFile(
 	const cached = cache.get(cacheKey);
 	if (cached) return cached;
 
-	const { build } = await import("esbuild");
+	// esbuild imported statically at top
 	let result: Awaited<ReturnType<typeof build>>;
 	try {
 		result = await build({
@@ -237,7 +243,9 @@ export async function loadModuleFile(
 	if (!existsSync(file)) writeFileSync(file, code, "utf8");
 	pruneStaleBundles(paths, prefix, file);
 
-	const module = (await import(pathToFileURL(file).href)) as LoadedModule;
+	const module = (await nativeDynamicImport(
+		pathToFileURL(file).href,
+	)) as LoadedModule;
 	cache.set(cacheKey, module);
 	return module;
 }
