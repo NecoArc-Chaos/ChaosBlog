@@ -33,6 +33,8 @@ import { withUserConfig } from "../utils/config-overlay.ts";
  * 3. "meting"（云端歌单模式）：
  *    - 数据源：Meting API 远端歌单（网易云 / QQ音乐 / 酷狗等）
  *    - 特点：客户端异步按需拉取，海量曲库与封面自动解析。
+ *    - 可选 `preload: "metadata"`：组件进入视口即预取歌单元数据（不含音频流），
+ *      首屏直接显示第一首曲目；默认 "none"（不预取，交互后才请求）。
  *    - 示例：
  *      provider: "meting",
  *      meting: { server: "netease", type: "playlist", id: "14164869977" }
@@ -59,6 +61,7 @@ export const musicConfig: MusicConfig = withUserConfig("music", {
 	// 		duration: 240,
 	// 	},
 	// ],
+
 	defaultVolume: 0.7,
 	defaultMode: "sequence",
 });
@@ -113,6 +116,14 @@ export function clampMusicVolume(value: number, fallback = 0.7): number {
 	return Math.min(1, Math.max(0, value));
 }
 
+/** 补齐 meting 配置的默认值（如 preload 默认 "none"），让 ResolvedMusicOptions 自包含。 */
+function resolveMetingConfig(
+	meting: MetingMusicConfig | undefined,
+): MetingMusicConfig | undefined {
+	if (!meting) return meting;
+	return Object.freeze({ ...meting, preload: meting.preload ?? "none" });
+}
+
 export function resolveMusicOptions(
 	config: MusicConfig,
 ): ResolvedMusicOptions | null {
@@ -126,7 +137,7 @@ export function resolveMusicOptions(
 		return Object.freeze({
 			provider: "meting",
 			playlist: Object.freeze([]),
-			meting: config.meting,
+			meting: resolveMetingConfig(config.meting),
 			defaultVolume: clampMusicVolume(config.defaultVolume),
 			defaultMode: config.defaultMode,
 		});
@@ -150,7 +161,7 @@ export function resolveMusicOptions(
 		return Object.freeze({
 			provider: "local",
 			playlist: Object.freeze(playlist),
-			meting: config.meting,
+			meting: resolveMetingConfig(config.meting),
 			defaultVolume: clampMusicVolume(config.defaultVolume),
 			defaultMode: config.defaultMode,
 		});

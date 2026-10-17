@@ -40,7 +40,7 @@ emitted chunk's location rather than the source file's.
 > **"Server" in a static site.** Shirone ships as SSG — every page is HTML on
 > disk and there is no server at runtime. But Astro still *renders* those pages
 > by executing components in Node at build time, and Vite calls that build the
-> SSR build (hence `src/integration/ssr-node-shims.ts`). So build-time Node
+> SSR build (hence `src/integration/vite/ssr-node-shims.ts`). So build-time Node
 > concerns — `__dirname`, `require`, filesystem reads — are real here even
 > though nothing runs on a server in production.
 
@@ -99,12 +99,54 @@ CSS file, so it resolves to the theme's own `src/` in both modes.
   dynamic `import()` outside the bundle) must be a **peer** dependency, because
   pnpm's strict layout hides the theme's own copy from the project root.
 
+## The peer dependency list
+
+The shortest possible one, and each entry has a verified reason in
+`src/integration/verify-peers.ts`. Three distinct mechanisms force a package
+onto the user's project:
+
+| Mechanism | Packages | Why bundling fails |
+| --- | --- | --- |
+| Imported by the user's own config | `astro` | the project *is* an Astro project |
+| Registered in `optimizeDeps.include` | `svelte`, `@astrojs/svelte` | Vite resolves that list from the project root, so a nested copy is invisible and islands silently stay server-side |
+| Imported by Astro itself, dynamically | `sharp` | Astro's image service resolves it from its own location; the `@img/*` bindings must also be version-matched |
+
+Plus `@astrojs/check` and `typescript`, which only `astro check` needs — they
+are declared so the command works right after `init`, not because a build
+requires them.
+
+The four `@iconify-json/*` sets used to belong in this table. They were
+removed when `astro-icon` was dropped: it located icon sets by reading the
+**user's** `package.json`, so no amount of bundling could make them
+transitive. Nothing in the theme reads a manifest for icons any more —
+`vite/icon/collections.ts` resolves them from inside the installed package and
+emits a tree-shaken collection — so they now ship as ordinary dependencies.
+
+That is the case worth internalising: *resolving* and *discovering* are
+different questions, and only the consumer's source tells you which one it
+does. A package that resolves fine from inside the theme is still unusable if
+the consumer looks it up in a manifest you do not control. The removal left
+one extra step behind — the theme now owns icon rendering, including the
+`local` collection a project's own `src/icons/*.svg` feeds, and the
+`@iconify/svelte` alias is mirrored in `tsconfig.json` so TypeScript resolves
+the theme's `Icon.svelte` rather than the real package's deprecated types.
+
+`src/integration/verify-peers.ts` is the single source of truth for that list,
+and `astro:config:setup` enforces it before anything expensive runs. Adding a
+package there means adding it to `PEER_REQUIREMENTS`, choosing its tier, and
+writing down the mechanism — the reason string is user-visible, so it is the
+contract's documentation as much as the code is. Its tests
+(`tests/verify-peers.test.mjs`) cover absent, stale, unparseable and
+tooling-only cases.
+
 ## Adding things
 
 | You add | What to do |
 | --- | --- |
 | A route in `src/pages/` | Nothing. `routes.ts` discovers it and `injectRoute`s it. Non-HTML endpoints (`*.txt.ts`, `*.xml.ts`) are handled. |
 | A config module in `src/config/` | Nothing, if it follows the existing shape — the template picks it up and its relative imports are rewritten. Keep it exporting through the `src/config/index.ts` barrel. |
+| An integration option (swup, astro-icon, expressive-code, svelte, mdx, or the shared `vite.build` keys) | Put it in `src/config/integrationsConfig.ts`, not in the wiring. The integration — the single Astro config entry point for source mode and package mode alike — reads it, so one edit covers both. Do **not** export it through the barrel and do **not** route it through `withUserConfig` — package mode bundles this file at build time, so it has no user-overlay layer. Wiring (aliases, `preprocess`, `optimizeDeps`, `vite.plugins`, expressive-code `themes`/`plugins`) stays in `src/integration/index.ts`, where per-mode branches are commented. |
+| A content collection | Three things, all in this repo. Export its schema from `src/integration/collections.ts` (name it `<singular>Schema`), declare it in `src/content.config.ts` with `glob({ base: "./src/content/<key>", … })`, and add one entry to `src/integration/collections.manifest.json`. `tests/collections-manifest.test.mjs` fails if those three disagree. The pipeline reads that manifest to generate a package-mode user's `content.config.ts`, and copies `src/content/` recursively, so **shirones needs no change**. |
 | A data module in `src/data/` | Nothing. It is scaffolded to `shirones/config/data/`. Remember imports of `../config/x` become `../x` there. |
 | A component or layout | Nothing for it to work; it becomes overridable automatically. |
 | A new top-level `src/` directory | Nothing, except for `content/` and `integration/`. The shirones pipeline copies every top-level `src/` directory not in `PACKAGE_SRC_EXCLUDES` (`scripts/config.mjs`, currently `content` and `integration`). `content/` is user-owned and ships through the template; `integration/` is the theme's own wiring that shirones rebuilds for npm mode. (This used to be a whitelist, `PACKAGE_SRC_DIRS` — `src/user/` was added upstream and missed it, breaking the packaged build. That failure mode is gone.) |

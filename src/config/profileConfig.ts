@@ -12,12 +12,12 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 	links: [
 		{
 			name: "Bilibili",
-			icon: "fa6-brands:bilibili",
+			icon: "fa7-brands:bilibili",
 			url: "https://space.bilibili.com/1823717804",
 		},
 		{
 			name: "GitHub",
-			icon: "fa6-brands:github",
+			icon: "fa7-brands:github",
 			url: "https://github.com/NecoArc-Chaos",
 		},
 	],

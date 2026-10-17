@@ -12,7 +12,7 @@ pnpm install
 pnpm dev
 ```
 
-要求：Node.js >= 22.12，pnpm 9.x（仓库锁定 `pnpm@9.14.4`）。
+要求：Node.js >= 22.12，pnpm 11.x。
 
 ## 常用命令
 
@@ -24,6 +24,7 @@ pnpm dev
 | `pnpm anime:sync --provider bangumi` | 同步 Bangumi 追番快照 |
 | `pnpm format` | Biome 格式化（提交前必跑） |
 | `pnpm check` | Astro 诊断 |
+| `pnpm type-check` | TypeScript 校验 |
 | `pnpm check:manifest` | 校验组件清单 |
 | `pnpm test` | 运行测试 |
 | `pnpm build` | 构建站点与 Pagefind 索引 |

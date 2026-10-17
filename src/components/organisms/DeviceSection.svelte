@@ -21,7 +21,14 @@ import type { DeviceCategory, DeviceItem } from "@/types/devicesConfig";
 let {
 	categories = [] as DeviceCategory[],
 	items = [] as DeviceItem[],
-}: { categories?: DeviceCategory[]; items?: DeviceItem[] } = $props();
+	title = i18n(I18nKey.devices),
+	subtitle = i18n(I18nKey.devicesBanner),
+}: {
+	categories?: DeviceCategory[];
+	items?: DeviceItem[];
+	title?: string;
+	subtitle?: string;
+} = $props();
 
 let query = $state("");
 let selectedCategory = $state("");
@@ -122,8 +129,8 @@ $effect(() => {
 <Card color="var(--card-bg)" radius="l" class="devices-section px-8 py-6">
 	<PageHeader
 		icon="material-symbols:devices-rounded"
-		title={i18n(I18nKey.devices)}
-		subtitle={i18n(I18nKey.devicesBanner)}
+		{title}
+		{subtitle}
 	/>
 
 	{#if enabledItems.length > 0}
@@ -307,7 +314,8 @@ $effect(() => {
 		gap: 0.75rem
 		margin-top: 1.25rem
 
-		/* 瀑布流：仅 ≥md（单列下 packMasonry 自动清空定位，保持普通行距）。
+		/* 瀑布流：仅 ≥md（本断点内即使只排得下 1 列，packMasonry 也会写
+		   grid-row-end span，否则卡片只占 1 行 8px 会重叠）。
 		   约定与 PostPage/masonry.ts 同步：auto-rows 8px、row-gap 0、
 		   行距 16px 烘焙进 span（column-gap 与 ROW_GAP 同值） */
 		@media (min-width: bp-md)
