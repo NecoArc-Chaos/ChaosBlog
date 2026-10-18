@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { registerPersistentShellSync } from "./feature-page";
 
-const GAME_COUNT = 2;
+const GAME_COUNT = 13;
 
 test.describe("游戏展示页", () => {
 	test.beforeEach(async ({ page }) => {
@@ -14,8 +14,8 @@ test.describe("游戏展示页", () => {
 			"data-current-page",
 			"games",
 		);
-		await expect(page.locator(".page-header__title")).toHaveText("Games");
-		await expect(page.locator(".games-section__count")).toHaveText("2 games");
+		await expect(page.locator(".page-header__title")).toHaveText("游戏");
+		await expect(page.locator(".games-section__count")).toHaveText("13 款游戏");
 
 		const minecraft = page.locator('[data-game="minecraft"]');
 		await expect(minecraft.locator("h2")).toHaveText("Minecraft");
@@ -23,11 +23,11 @@ test.describe("游戏展示页", () => {
 			"Mojang Studios",
 		);
 		await expect(minecraft.locator('[data-status="playing"]')).toContainText(
-			"Playing",
+			"正在游玩",
 		);
 		await expect(minecraft.locator(".game-card__rating")).toContainText("5.0");
 		await expect(minecraft.locator(".game-card__hours")).toContainText(
-			"420 hrs",
+			"420 小时",
 		);
 		await expect(minecraft.locator(".game-card__platform")).toContainText("PC");
 		await expect(minecraft.locator(".game-card__year")).toHaveText("2011");
@@ -36,14 +36,21 @@ test.describe("游戏展示页", () => {
 		);
 		await expect(minecraft).not.toHaveClass(/game-card--featured/);
 		await expect(
-			minecraft.getByRole("link", { name: "Store page" }),
+			minecraft.getByRole("link", { name: "商店页面" }),
 		).toHaveAttribute("href", "https://www.minecraft.net/");
 
 		// 精选卡：徽标与横屏封面主视觉
-		const nte = page.locator('[data-game="nte-neverness-to-everness"]');
-		await expect(nte).toHaveClass(/game-card--featured/);
-		await expect(nte.locator(".game-card__featured")).toContainText("Featured");
-		await expect(nte.locator(".game-card__cover")).toBeVisible();
+		const hollowKnight = page.locator('[data-game="hollow-knight"]');
+		await expect(hollowKnight).toHaveClass(/game-card--featured/);
+		await expect(hollowKnight.locator(".game-card__featured")).toContainText(
+			"特别推荐",
+		);
+		await expect(hollowKnight.locator(".game-card__cover")).toBeVisible();
+
+		// 无封面条目退化为图标横幅，不渲染 img
+		const redAlert = page.locator('[data-game="red-alert-2"]');
+		await expect(redAlert.locator(".game-card__cover")).toHaveCount(0);
+		await expect(redAlert.locator(".game-card__banner-icon")).toBeVisible();
 	});
 
 	test("直接加载时导航高亮与侧栏页面过滤正确", async ({ page }) => {
@@ -59,25 +66,24 @@ test.describe("游戏展示页", () => {
 	test("分类筛选同步剩余游戏与计数（含 LoadingIndicator 过渡）", async ({
 		page,
 	}) => {
-		// 无条目的分类（RPG / Action / Casual）不渲染 chips
+		// 已移除的 open-world 分类不再渲染 chip
 		await expect(
-			page.getByRole("button", { name: "RPG", exact: true }),
+			page.getByRole("button", { name: "Open World", exact: true }),
 		).toHaveCount(0);
 
-		await page.getByRole("button", { name: "Open World", exact: true }).click();
+		await page.getByRole("button", { name: "视觉小说", exact: true }).click();
 		await expect(
 			page.locator(".games-section__loading .m3-loading--contained"),
 		).toBeVisible();
-		await expect(page.locator(".game-card")).toHaveCount(1);
-		await expect(page.locator(".games-section__count")).toHaveText("1 games");
-		await expect(
-			page.locator('[data-game="nte-neverness-to-everness"]'),
-		).toBeVisible();
+		await expect(page.locator(".game-card")).toHaveCount(2);
+		await expect(page.locator(".games-section__count")).toHaveText("2 款游戏");
+		await expect(page.locator('[data-game="va11-halla"]')).toBeVisible();
+		await expect(page.locator('[data-game="aokana"]')).toBeVisible();
 		await expect(page.locator('[data-game="minecraft"]')).toHaveCount(0);
 		await expect(page.locator(".games-section__loading")).toHaveCount(0);
 
 		// 再次点击已选分类取消筛选，恢复全部
-		await page.getByRole("button", { name: "Open World", exact: true }).click();
+		await page.getByRole("button", { name: "视觉小说", exact: true }).click();
 		await expect(page.locator(".game-card")).toHaveCount(GAME_COUNT);
 	});
 
@@ -86,7 +92,7 @@ test.describe("游戏展示页", () => {
 		await searchInput.fill("Unknown9999");
 		await expect(page.locator(".game-card")).toHaveCount(0);
 		await expect(page.locator(".games-section__empty")).toContainText(
-			"No games matched your filters",
+			"没有找到匹配的游戏",
 		);
 	});
 
@@ -106,7 +112,7 @@ test.describe("游戏展示页", () => {
 	});
 
 	test("URL 参数刷新后恢复筛选状态", async ({ page }) => {
-		await page.getByRole("button", { name: "Sandbox", exact: true }).click();
+		await page.getByRole("button", { name: "沙盒", exact: true }).click();
 		await expect(page).toHaveURL(/[?&]category=sandbox/);
 		await expect(page.locator(".game-card")).toHaveCount(1);
 		await expect(page.locator('[data-game="minecraft"]')).toBeVisible();
@@ -116,7 +122,7 @@ test.describe("游戏展示页", () => {
 		await expect(page.locator(".game-card")).toHaveCount(1);
 		await expect(page.locator('[data-game="minecraft"]')).toBeVisible();
 		await expect(
-			page.getByRole("button", { name: "Sandbox", exact: true }),
+			page.getByRole("button", { name: "沙盒", exact: true }),
 		).toHaveAttribute("aria-pressed", "true");
 	});
 });
