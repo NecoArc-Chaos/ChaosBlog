@@ -117,6 +117,7 @@ export const gamesData: GameItem[] = [
 		developer: "Lasengle / TYPE-MOON",
 		category: "rpg",
 		status: "playing",
+		cover: "assets/games/fate-grand-order.jpg",
 		icon: "material-symbols:auto-stories-outline-rounded",
 		rating: 4.5,
 		hours: 800,
@@ -150,6 +151,7 @@ export const gamesData: GameItem[] = [
 		developer: "Westwood Pacific",
 		category: "strategy",
 		status: "completed",
+		cover: "assets/games/red-alert-2.jpg",
 		icon: "material-symbols:strategy",
 		rating: 5,
 		hours: 300,
@@ -166,6 +168,7 @@ export const gamesData: GameItem[] = [
 		developer: "潜艇伟伟迷（同人改版）",
 		category: "strategy",
 		status: "completed",
+		cover: "assets/games/plants-vs-zombies-hybrid.jpg",
 		icon: "material-symbols:local-florist-rounded",
 		rating: 4.5,
 		hours: 60,
@@ -174,7 +177,7 @@ export const gamesData: GameItem[] = [
 		tags: ["塔防", "改版", "休闲", "脑洞"],
 		description:
 			"玩家自制的高人气改版：把豌豆、坚果与寒冰射手杂交成一大批离谱新植物，关卡难度与脑洞一起膨胀，越玩越上头。",
-		link: "https://search.bilibili.com/all?keyword=植物大战僵尸杂交版",
+		link: "https://www.pvzhe.com/home",
 	},
 	{
 		id: "overcooked-2",

@@ -47,10 +47,9 @@ test.describe("游戏展示页", () => {
 		);
 		await expect(hollowKnight.locator(".game-card__cover")).toBeVisible();
 
-		// 无封面条目退化为图标横幅，不渲染 img
-		const redAlert = page.locator('[data-game="red-alert-2"]');
-		await expect(redAlert.locator(".game-card__cover")).toHaveCount(0);
-		await expect(redAlert.locator(".game-card__banner-icon")).toBeVisible();
+		// 全部条目都带有官方横版封面，不再出现图标兜底横幅
+		await expect(page.locator(".game-card__cover")).toHaveCount(GAME_COUNT);
+		await expect(page.locator(".game-card__banner-icon")).toHaveCount(0);
 	});
 
 	test("直接加载时导航高亮与侧栏页面过滤正确", async ({ page }) => {

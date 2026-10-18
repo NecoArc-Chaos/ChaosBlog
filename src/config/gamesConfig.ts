@@ -15,7 +15,9 @@ import { withUserConfig } from "../utils/config-overlay.ts";
 export const gamesConfig: GamesConfig = withUserConfig("games", {
 	enable: true,
 	title: "$t:games",
-	description: "$t:gamesBanner",
+	// 追加封面版权声明：封面均为各发行商官方素材，仅作个人非商业展示。
+	description:
+		"我在玩的游戏——封面、评分、游玩时长与简评。封面版权归各游戏发行商所有。",
 	categories: [
 		{
 			key: "action",
