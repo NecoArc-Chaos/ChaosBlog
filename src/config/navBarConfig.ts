@@ -145,6 +145,7 @@ const defaultNavBarConfig: NavBarConfig = {
 		LinkPresets.Moments,
 		LinkPresets.Anime,
 		LinkPresets.Albums,
+		LinkPresets.Games,
 		{
 			name: i18n(I18nKey.more),
 			icon: "material-symbols:apps-rounded",
@@ -152,7 +153,6 @@ const defaultNavBarConfig: NavBarConfig = {
 				LinkPresets.Timeline,
 				LinkPresets.Projects,
 				LinkPresets.Devices,
-				LinkPresets.Games,
 				LinkPresets.Skills,
 				// 分类/标签入口不进导航菜单（避免菜单项过多），预设已登记指向独立页面，
 				// 需要时取消注释即可

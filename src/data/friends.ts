@@ -15,17 +15,26 @@ export const friendsData: FriendItem[] = [
 	{
 		id: 1,
 		title: "Chaos的小站",
-		imgurl: "https://www.necoarcchaos.xyz/_astro/Chaoss.DFvC6oND_oNina.webp",
+		imgurl: "https://www.nachaos.xyz/assets/images/chaos-avatar.jpg",
 		desc: "调制饮料，改变人生。正在尝试写点有用的",
-		siteurl: "https://www.necoarcchaos.xyz/",
+		siteurl: "https://www.nachaos.xyz/",
 		tags: ["Friend"],
 	},
 	{
 		id: 2,
 		title: "Nanci的个人主页",
-		imgurl: "https://nanci.solian.page/avatar.png",
+		imgurl:
+			"https://blog.thsl.dpdns.org/wp-content/uploads/2024/12/cropped-465070_article_blog_content_news_note_icon.png",
 		desc: "遥看月色亦无痕，夜雨落花沾凡尘",
 		siteurl: "https://blog.thsl.dpdns.org/",
+		tags: ["Friend"],
+	},
+	{
+		id: 3,
+		title: "ScophireSpace",
+		imgurl: "https://blog.scophire.space/logo/icon.png",
+		desc: "Better code, brighter world.",
+		siteurl: "https://blog.scophire.space/",
 		tags: ["Friend"],
 	},
 	/*{
