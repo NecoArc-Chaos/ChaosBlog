@@ -23,8 +23,7 @@ export const friendsData: FriendItem[] = [
 	{
 		id: 2,
 		title: "Nanci的个人主页",
-		imgurl:
-			"https://blog.thsl.dpdns.org/wp-content/uploads/2025/05/1747840801-IMG_3534.jpeg",
+		imgurl: "https://www.nachaos.xyz/assets/images/nanci-avatar.jpg",
 		desc: "遥看月色亦无痕，夜雨落花沾凡尘",
 		siteurl: "https://blog.thsl.dpdns.org/",
 		tags: ["Friend"],

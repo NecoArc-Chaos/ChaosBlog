@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { registerPersistentShellSync } from "./feature-page";
 
-const GAME_COUNT = 13;
+const GAME_COUNT = 18;
 
 test.describe("游戏展示页", () => {
 	test.beforeEach(async ({ page }) => {
@@ -15,7 +15,7 @@ test.describe("游戏展示页", () => {
 			"games",
 		);
 		await expect(page.locator(".page-header__title")).toHaveText("游戏");
-		await expect(page.locator(".games-section__count")).toHaveText("13 款游戏");
+		await expect(page.locator(".games-section__count")).toHaveText("18 款游戏");
 
 		const minecraft = page.locator('[data-game="minecraft"]');
 		await expect(minecraft.locator("h2")).toHaveText("Minecraft");
@@ -74,8 +74,8 @@ test.describe("游戏展示页", () => {
 		await expect(
 			page.locator(".games-section__loading .m3-loading--contained"),
 		).toBeVisible();
-		await expect(page.locator(".game-card")).toHaveCount(2);
-		await expect(page.locator(".games-section__count")).toHaveText("2 款游戏");
+		await expect(page.locator(".game-card")).toHaveCount(5);
+		await expect(page.locator(".games-section__count")).toHaveText("5 款游戏");
 		await expect(page.locator('[data-game="va11-halla"]')).toBeVisible();
 		await expect(page.locator('[data-game="aokana"]')).toBeVisible();
 		await expect(page.locator('[data-game="minecraft"]')).toHaveCount(0);
