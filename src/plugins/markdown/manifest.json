@@ -781,11 +781,7 @@
 			],
 			"registeredIn": "src/utils/markdown-processor.mjs",
 			"styles": ["src/styles/markdown/fields.css"],
-			"runtime": {
-				"mode": "none",
-				"modules": [],
-				"network": []
-			},
+			"runtime": { "mode": "none", "modules": [], "network": [] },
 			"docs": ["docs/markdown-extensions.md"],
 			"tests": ["tests/plugins/markdown/containers/fields.test.mjs"],
 			"notes": [

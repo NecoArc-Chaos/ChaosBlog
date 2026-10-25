@@ -26,6 +26,7 @@ import { normalisePath, resolvePaths } from "./resolve/paths.ts";
 import {
 	buildOverrideRegistry,
 	createOverlayTargets,
+	findLegacyIconImports,
 	findOrphanUserFiles,
 	type OverrideRegistryRef,
 } from "./resolve/registry.ts";
@@ -194,7 +195,7 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 					projectRoot: paths.projectRoot,
 					skip: paths.isThemeRepo,
 				});
-				if (reportPeerViolations(peerViolations, logger)) {
+				if (reportPeerViolations(peerViolations, logger, paths.projectRoot)) {
 					throw new Error(
 						"[shirones] the project is missing dependencies the theme requires — " +
 							"see the error above for the list and the install command.",
@@ -243,6 +244,22 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 								`${orphans.map((file) => `  - ${file}`).join("\n")}\n` +
 								"  This usually means the theme renamed a config module — " +
 								"check the release notes and move your edits across.",
+						);
+					}
+
+					// An override copied out of the theme before the icon rewrite
+					// still imports `astro-icon`, which no longer resolves, so
+					// its icons render as nothing. Say so, rather than letting a
+					// build fail on a module-not-found with no hint of why.
+					const legacyIconFiles = findLegacyIconImports(registry.overrides);
+					if (legacyIconFiles.length > 0) {
+						logger.warn(
+							`[overrides] ${legacyIconFiles.length} file(s) still import ` +
+								"`astro-icon`, which the theme no longer uses:\n" +
+								`${legacyIconFiles.map((file) => `  - ${file}`).join("\n")}\n` +
+								"  Import `atoms/display/Icon.svelte` instead and pass " +
+								'`icon="prefix:name"` — it renders server-side SVG from a ' +
+								"build-time collection, so no hydration island is needed.",
 						);
 					}
 				}
@@ -363,7 +380,13 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 					integrations,
 					markdown: { processor: processor as never },
 					vite: {
-						resolve: { alias: createAliases(paths) },
+						resolve: {
+							alias: createAliases(paths),
+							// Layout.astro resolves the default color scheme at build
+							// time; this package ships extensionless ESM imports that
+							// Node cannot load when externalized, so Vite bundles it.
+							noExternal: ["@material/material-color-utilities"],
+						},
 						plugins: [
 							// The overlay rewriter redirects user files onto package
 							// files; inside the theme's own repository every import already
