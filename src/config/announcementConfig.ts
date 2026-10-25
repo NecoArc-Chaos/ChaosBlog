@@ -9,10 +9,7 @@ export const announcementConfig: AnnouncementConfig = withUserConfig(
 	"announcement",
 	{
 		title: "Coming Posts & Note", // 公告标题，填空使用 i18n 字符串 Key.announcement
-		content: `1.Gal杂谈
-2.关于《朝圣》
-3.关于本站
-4.#鸽鸽鸽鸽鸽`, // 公告内容
+		content: "", // 公告内容，为空不渲染
 		closable: false, // 允许用户关闭公告
 		link: {
 			enable: false, // 启用链接

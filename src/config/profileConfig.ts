@@ -20,5 +20,10 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 			icon: "fa7-brands:github",
 			url: "https://github.com/NecoArc-Chaos",
 		},
+		{
+			name: "Email",
+			icon: "material-symbols:mail-rounded",
+			url: "mailto:acceleratoor0123@gmail.com",
+		},
 	],
 });
