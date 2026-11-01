@@ -5,8 +5,11 @@ description: 史铁生能从巨大的痛苦中活下来，不是因为地坛的�
 tags: [随笔]
 category: 随心写
 draft: false
+license:
+  author: 何老师
 ---
 
+> 作者：何老师  
 > 投稿的同学语文作业随笔  
 > 非常佩服的文笔  
 > 希望能给我以后的写作一点目标（）  

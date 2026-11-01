@@ -9,18 +9,17 @@ draft: false
 
 # GoatCraft
 
-**Solsynth Network的官方MC服务器**  
+**Solsynth Network 的官方 MC 服务器**  
 
-→[GoatCraft官方文档](https://kb.solsynth.dev/goatcraft/)←  
+→[GoatCraft 官方文档](https://kb.solsynth.dev/goatcraft/)←  
 
 **多节点**/**基岩互通**/**生存养老**  
-版本1.21.8+  
-支持Drasl第三方登录（无需正版Java账号）  
+版本 1.21.8+  
+支持 Drasl 第三方登录（无需正版 Java 账号）  
 
-**官方领域**: **加入此→**[**Solian领域**](https://web.solian.app/#/realms/solsynth)**←以与社区连接！**  
+**官方领域**: **加入此→**[**Solian 领域**](https://web.solian.app/#/realms/solsynth)**←以与社区连接！**  
 ***开发*频道**可以联系开发者，声明问题或提供建议~  
 **摸鱼频道**可以获取服务器消息~  
-
 
 ## 快速导航
 
@@ -74,17 +73,17 @@ GoatCraft 内设基于 **BlueMap** 的云端地图，可实时查看世界动态
 
 ## 第三方登录教程
 
->GoatCraft Auth（简称 GCA）是一个外置的登录工具，允许玩家在不使用正版 Minecraft 账户的情况下登录 GoatCraft 服务器。这对于那些没有正版账户但仍然希望体验 GoatCraft 的玩家来说非常有用。    
+>GoatCraft Auth（简称 GCA）是一个外置的登录工具，允许玩家在不使用正版 Minecraft 账户的情况下登录 GoatCraft 服务器。这对于那些没有正版账户但仍然希望体验 GoatCraft 的玩家来说非常有用。  
 
 使用 GCA 进行登录会带来许多好处，例如和 Solar Network 交互的一些功能  
-如果你曾使用正版账号游玩，可以选择迁移至 GCA 登录，具体请看→[SolianGCA官方文档](https://kb.solsynth.dev/goatcraft/auth/)←  
+如果你曾使用正版账号游玩，可以选择迁移至 GCA 登录，具体请看→[SolianGCA 官方文档](https://kb.solsynth.dev/goatcraft/auth/)←  
 下面是普通登录教程  
 
 ### 所需物品  
 
 - 一个邮箱（拥有所有权）  
 - 有第三方登录功能的启动器  
-    站长已测试LauncherX(macOS)，HMCL(win)和FCL(android)  
+    站长已测试 LauncherX(macOS)，HMCL(win)和 FCL(android)  
 
 ### 操作步骤  
 
@@ -98,8 +97,8 @@ https://authmc.solsynth.dev/
 
 2. **登录启动器**  
 
-    - HMCL系启动器  
-    
+    - HMCL 系启动器  
+  
     选择添加**认证服务器**  
     服务器地址  
     ```
@@ -107,17 +106,17 @@ https://authmc.solsynth.dev/
     ```
     确定后，在**侧边栏**中，点击新添加的认证服务器，标签为“Drasl”  
     填写用户名（玩家名字）和密码（Token）  
-    
+  
     - 其他启动器（可能有偏差）  
-    
+  
     选择第三方登录  
     电子邮箱填登录邮箱  
     密码填你的**Minecraft Token**  
-    Authlib服务器填
+    Authlib 服务器填
     ```
     https://authmc.solsynth.dev/authlib-injector
-    ```  
-    
+    ```
+  
 填写完成后登录即可  
 
 3. **填写服务器**  
@@ -126,19 +125,18 @@ https://authmc.solsynth.dev/
 
 →[服务器地址原帖](https://solian.app/posts/0199bee5-8494-74b5-83f9-3380777db628)  
 
-
 ---
 
 ## 基岩版登入  
 
 1. **下载**  
    - **安卓**  
-    在Play商店购买正版  
+    在 Play 商店购买正版  
     或去苦力怕论坛下载（免费）  
    - **苹果**  
-    在AppStore购买正版  
+    在 AppStore 购买正版  
     或去微信哈士奇公众号获取（金币免费兑换）  
-2. **登录Microsoft账号**  
+2. **登录 Microsoft 账号**  
 (基岩版无正版验证)  
 用手机号/邮箱直接注册一个微软账号  
 登录即可  
@@ -186,4 +184,4 @@ GoatCraft 有 Slimefun4 安装，不过因为其开发已经停止， 目前 1.2
 不过如果你觉得原版玩完了也不放可以尝试一下  
 →[Slimefun4 插件官方文档](https://slimefun-wiki.guizhanss.cn/Getting-Started)←  
 
-本文部分摘抄自GoatCraft官方文档  
+本文部分摘抄自 GoatCraft 官方文档

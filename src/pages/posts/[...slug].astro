@@ -209,8 +209,8 @@ const jsonLd = {
 	keywords: entry.data.tags,
 	author: {
 		"@type": "Person",
-		name: profileConfig.name,
-		url: Astro.site,
+		name: postLicense.author.name || profileConfig.name,
+		url: postLicense.author.url || Astro.site,
 	},
 	datePublished: entry.data.publishedAt
 		? publishedInstant.toISOString()
@@ -345,7 +345,7 @@ const jsonLd = {
 					options={shareOptions}
 					title={entry.data.title}
 					description={effectiveDescription}
-					author={profileConfig.name}
+					author={postLicense.author.name || profileConfig.name}
 					published={formatDateToYYYYMMDD(entry.data.published)}
 					siteTitle={siteConfig.title}
 					postPath={canonicalPostUrl}
