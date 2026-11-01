@@ -21,6 +21,24 @@ html.is-animating .transition-swup-fade {
     }
 }
 
+/* M3E Spatial/Effects 分离：位移采用欠阻尼弹簧回弹（Spatial），透明度采用临界阻尼（Effects） */
+@keyframes m3e-spatial-slide-up {
+    0% {
+        transform: translateY(2rem);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+@keyframes m3e-effects-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 /* Main components */
 .onload-animation {
     opacity: 0;
@@ -31,15 +49,21 @@ html.is-animating .transition-swup-fade {
     animation-delay: 0ms
 }
 #sidebar {
-    animation: 500ms fade-in-up var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+    animation:
+        500ms m3e-spatial-slide-up var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards,
+        250ms m3e-effects-fade-in var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)) forwards;
     animation-delay: 100ms;
 }
 #sidebar .onload-animation,
 #sidebar-secondary .onload-animation {
-    animation: 500ms fade-in-up var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+    animation:
+        500ms m3e-spatial-slide-up var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards,
+        250ms m3e-effects-fade-in var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)) forwards;
 }
 #sidebar-secondary {
-    animation: 500ms fade-in-up var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+    animation:
+        500ms m3e-spatial-slide-up var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards,
+        250ms m3e-effects-fade-in var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)) forwards;
     animation-delay: 100ms;
 }
 #swup-container {

@@ -184,6 +184,17 @@ let drawerEl: HTMLElement | undefined = $state();
 		transform: translateX(-100%)
 		transition: transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-accelerate)
 
+		/* 左侧延伸裙边：防止弹簧回弹过冲（translateX > 0）时左侧脱离屏幕边缘产生漏缝 */
+		&::before
+			content: ""
+			position: absolute
+			top: 0
+			bottom: 0
+			right: 100%
+			width: 120px
+			background: inherit
+			pointer-events: none
+
 	&--open &__panel
 		transform: translateX(0)
 		transition: transform 480ms var(--m3e-easing-drawer-spring, cubic-bezier(0.22, 1.25, 0.36, 1))
@@ -313,13 +324,19 @@ let drawerEl: HTMLElement | undefined = $state();
 	&__group-body
 		padding: 4px 0 8px
 		transform-origin: top center
-		animation: drawer-group-spring 380ms var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1))
+		animation:
+			drawer-group-spatial 380ms var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1)),
+			drawer-group-effects 200ms var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1))
 
-@keyframes drawer-group-spring
+@keyframes drawer-group-spatial
 	from
-		opacity: 0
 		transform: translateY(-8px) scaleY(0.95)
 	to
-		opacity: 1
 		transform: translateY(0) scaleY(1)
+
+@keyframes drawer-group-effects
+	from
+		opacity: 0
+	to
+		opacity: 1
 </style>

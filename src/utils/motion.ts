@@ -189,22 +189,32 @@ export interface RevealInParams {
 
 /**
  * 元素级入场（reveal action 的非 Svelte 版本）：
- * 淡入 + 上移 0.25rem 到位，默认 emphasized-decelerate；reduced-motion 直接到位。
+ * M3E Spatial/Effects 分离：位移采用弹簧回弹（Spatial），透明度采用临界阻尼（Effects）；
+ * reduced-motion 直接到位。
  */
 export function revealIn(el: HTMLElement, params: RevealInParams = {}): void {
 	if (prefersReducedMotion()) return;
+	const delay = params.delay ?? 0;
+	// Spatial: 位移与形变允许回弹
 	el.animate(
 		[
-			{ opacity: 0, transform: "translateY(0.75rem) scale(0.98)" },
-			{ opacity: 1, transform: "translateY(0) scale(1)" },
+			{ transform: "translateY(0.75rem) scale(0.98)" },
+			{ transform: "translateY(0) scale(1)" },
 		],
 		{
 			duration: params.duration ?? 380,
-			delay: params.delay ?? 0,
+			delay,
 			easing: params.easing ?? EASING_SPRING,
 			fill: "both",
 		},
 	);
+	// Effects: 透明度无回弹，避免过冲视觉噪点
+	el.animate([{ opacity: 0 }, { opacity: 1 }], {
+		duration: 200,
+		delay,
+		easing: EASING_DECELERATE,
+		fill: "both",
+	});
 }
 
 /**
