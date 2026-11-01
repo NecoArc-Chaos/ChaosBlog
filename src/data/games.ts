@@ -77,7 +77,7 @@ export const gamesData: GameItem[] = [
 		tags: ["格斗", "月姬", "Type-Moon", "2D"],
 		description:
 			"《月姬 -A piece of blue glass moon-》世界观下的 2D 格斗。月蚀与魔术交织的演出极具辨识度，上手轻快，连段上限却很深。",
-		link: "https://store.steampowered.com/app/1372110/MELTY_BLOOD_TYPE_LUMINA/",
+		link: "https://store.steampowered.com/app/1372280/MELTY_BLOOD_TYPE_LUMINA/",
 	},
 	{
 		id: "arena-breakout",
@@ -109,7 +109,7 @@ export const gamesData: GameItem[] = [
 		tags: ["生存", "制作", "动作 RPG", "荒诞"],
 		description:
 			"在异星荒原上捡垃圾、造装备、驯怪物的生存动作 RPG。剧情胡闹、台词欠揍，但采集与战斗的循环意外扎实。",
-		link: "https://store.steampowered.com/app/339070/Crashlands/",
+		link: "https://store.steampowered.com/app/391730/Crashlands/",
 	},
 	{
 		id: "fate-grand-order",
