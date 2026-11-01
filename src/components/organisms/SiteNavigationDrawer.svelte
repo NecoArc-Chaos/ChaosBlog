@@ -167,7 +167,7 @@ let drawerEl: HTMLElement | undefined = $state();
 	&--open &__scrim
 		opacity: 1
 
-	/* 面板：360dp 宽、surface-container-low、右侧 16dp 大圆角，左侧滑入 */
+	/* 面板：360dp 宽、surface-container-low、右侧 16dp 大圆角，左侧滑入带回弹 */
 	&__panel
 		position: absolute
 		top: 0
@@ -182,10 +182,11 @@ let drawerEl: HTMLElement | undefined = $state();
 		color: var(--on-surface)
 		border-radius: 0 var(--shape-corner-l) var(--shape-corner-l) 0
 		transform: translateX(-100%)
-		transition: transform var(--m3e-duration-long) var(--m3e-easing-emphasized-decelerate)
+		transition: transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-accelerate)
 
 	&--open &__panel
 		transform: translateX(0)
+		transition: transform 480ms var(--m3e-easing-drawer-spring, cubic-bezier(0.22, 1.25, 0.36, 1))
 
 	&__brand
 		padding: var(--m3e-space-5) var(--shape-corner-xl) var(--m3e-space-3)
@@ -301,7 +302,7 @@ let drawerEl: HTMLElement | undefined = $state();
 	&__group-arrow
 		display: flex
 		flex: none
-		transition: transform var(--m3e-duration-short) var(--m3e-easing-standard)
+		transition: transform 350ms var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1))
 		> :global(svg)
 			width: 1.25rem
 			height: 1.25rem
@@ -311,4 +312,14 @@ let drawerEl: HTMLElement | undefined = $state();
 
 	&__group-body
 		padding: 4px 0 8px
+		transform-origin: top center
+		animation: drawer-group-spring 380ms var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1))
+
+@keyframes drawer-group-spring
+	from
+		opacity: 0
+		transform: translateY(-8px) scaleY(0.95)
+	to
+		opacity: 1
+		transform: translateY(0) scaleY(1)
 </style>

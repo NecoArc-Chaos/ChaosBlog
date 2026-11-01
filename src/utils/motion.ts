@@ -52,6 +52,9 @@ export const EASING_DECELERATE = "cubic-bezier(0.05, 0.7, 0.1, 1)";
 /** M3 emphasized-accelerate：退出/收起（集合退场共用） */
 export const EASING_ACCELERATE = "cubic-bezier(0.3, 0, 0.8, 0.15)";
 
+/** M3E spring：带柔和回弹（Overshoot）的弹簧缓动曲线 */
+export const EASING_SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+
 const COLLAPSE_EASING = EASING_EMPHASIZED; // M3 emphasized-decelerate
 
 /**
@@ -180,23 +183,25 @@ export interface RevealInParams {
 	delay?: number;
 	/** 动画时长 ms（默认 250 = --m3e-duration-medium） */
 	duration?: number;
+	/** 缓动曲线（默认 EASING_DECELERATE，可传 EASING_SPRING 获得回弹感） */
+	easing?: string;
 }
 
 /**
  * 元素级入场（reveal action 的非 Svelte 版本）：
- * 淡入 + 上移 0.25rem 到位，emphasized-decelerate；reduced-motion 直接到位。
+ * 淡入 + 上移 0.25rem 到位，默认 emphasized-decelerate；reduced-motion 直接到位。
  */
 export function revealIn(el: HTMLElement, params: RevealInParams = {}): void {
 	if (prefersReducedMotion()) return;
 	el.animate(
 		[
-			{ opacity: 0, transform: "translateY(0.25rem)" },
-			{ opacity: 1, transform: "translateY(0)" },
+			{ opacity: 0, transform: "translateY(0.75rem) scale(0.98)" },
+			{ opacity: 1, transform: "translateY(0) scale(1)" },
 		],
 		{
-			duration: params.duration ?? 250,
+			duration: params.duration ?? 380,
 			delay: params.delay ?? 0,
-			easing: EASING_DECELERATE,
+			easing: params.easing ?? EASING_SPRING,
 			fill: "both",
 		},
 	);

@@ -96,8 +96,23 @@ const className = Astro.props.class;
             const btn = this.querySelector('.expand-btn');
             const wrapper = this.querySelector(`#${id}`)
             btn!.addEventListener('click', () => {
-                wrapper!.classList.remove('collapsed');
+                const wrapperEl = wrapper as HTMLElement;
+                const startHeight = wrapperEl.getBoundingClientRect().height;
+                wrapperEl.classList.remove('collapsed');
                 btn!.classList.add('hidden');
+                const endHeight = wrapperEl.scrollHeight;
+                if (endHeight > startHeight && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-reduced')) {
+                    wrapperEl.animate(
+                        [
+                            { height: `${startHeight}px`, transform: 'scaleY(0.98)' },
+                            { height: `${endHeight}px`, transform: 'scaleY(1)' }
+                        ],
+                        {
+                            duration: 420,
+                            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+                        }
+                    );
+                }
             })
         }
     }
