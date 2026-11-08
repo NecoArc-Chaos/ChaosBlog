@@ -15,6 +15,49 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      comments: ${{ steps.filter.outputs.comments }}
+      styles: ${{ steps.filter.outputs.styles }}
+    steps:
+      - name: Checkout history for path detection
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Classify changed paths
+        id: filter
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          # Manual runs and new branch pushes deliberately run every suite.
+          if [[ "$EVENT_NAME" == "workflow_dispatch" || "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            echo "comments=true" >> "$GITHUB_OUTPUT"
+            echo "styles=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            base="$BASE_SHA"
+            head="$CURRENT_SHA" # the checked-out PR merge commit
+          else
+            base="$BEFORE_SHA"
+            head="$CURRENT_SHA"
+          fi
+
+          # The orchestrator keeps the guard and classifier outputs separate,
+          # then gives the guard precedence if the classifier itself changed.
+          scripts/ci/detect-browser-suites.sh "$base" "$head" "$GITHUB_OUTPUT"
+
   quality:
     name: Code quality
     runs-on: ubuntu-24.04
