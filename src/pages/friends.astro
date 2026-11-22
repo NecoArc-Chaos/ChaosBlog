@@ -19,6 +19,12 @@ const pageDescription = resolveI18nText(
 ---
 
 <MainGridLayout title={pageTitle} description={pageDescription} page="friends">
-    <FriendSection friends={getFriendsList()} title={pageTitle} subtitle={pageDescription} client:visible></FriendSection>
-    <FriendApplyCard class="mt-4" client:visible />
+	<FriendSection
+		friends={getFriendsList()}
+		title={pageTitle}
+		subtitle={pageDescription}
+		pageSize={friendsConfig.pageSize}
+		client:visible
+	/>
+	<FriendApplyCard class="mt-4" client:visible />
 </MainGridLayout>
