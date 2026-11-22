@@ -1,0 +1,226 @@
+---
+import { getImage } from "astro:assets";
+import Avatar from "@components/atoms/display/Avatar.svelte";
+import Card from "@components/atoms/display/Card.svelte";
+import Icon from "@iconify/svelte";
+import { resolveImageAsset } from "@utils/asset-utils";
+import { profileConfig } from "@/config/profileConfig";
+import { aboutIntroData } from "@/data/about";
+
+interface Props {
+	class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+const avatarAsset = await resolveImageAsset(profileConfig.avatar ?? "");
+let avatarUrl = typeof avatarAsset === "string" ? avatarAsset : avatarAsset.src;
+let avatarSrcset: string | undefined;
+let avatarWidth: number | undefined;
+let avatarHeight: number | undefined;
+
+if (typeof avatarAsset !== "string") {
+	const widths = [132, 168, 230, 460].filter(
+		(width) => width <= avatarAsset.width,
+	);
+	const candidates = await Promise.all(
+		widths.map(async (width) => ({
+			width,
+			image: await getImage({
+				src: avatarAsset,
+				width,
+				format: "webp",
+				quality: 80,
+			}),
+		})),
+	);
+	avatarUrl =
+		candidates.find(({ width }) => width === 230)?.image.src ??
+		candidates.at(-1)?.image.src ??
+		avatarAsset.src;
+	avatarSrcset = candidates
+		.map(({ image, width }) => `${image.src} ${width}w`)
+		.join(", ");
+	avatarWidth = avatarAsset.width;
+	avatarHeight = avatarAsset.height;
+}
+---
+
+<section class:list={["about-intro", className]}>
+	<Card color="var(--card-bg)" radius="l">
+		<div class="about-intro__layout">
+			<div class="about-intro__portrait">
+				<Avatar
+					src={avatarUrl}
+					srcset={avatarSrcset}
+					sizes="(min-width: 1024px) 230px, (min-width: 640px) 168px, 132px"
+					width={avatarWidth}
+					height={avatarHeight}
+					loading="eager"
+					fetchPriority="high"
+					alt={aboutIntroData.name}
+					size={144}
+					shape="rounded"
+					class="!absolute !inset-0 !h-full !w-full"
+				/>
+			</div>
+			<div class="about-intro__body">
+				<div class="about-intro__identity">
+					<h1 class="about-intro__name">{aboutIntroData.name}</h1>
+					<span class="about-intro__accent" aria-hidden="true"></span>
+					<p class="about-intro__tagline">{aboutIntroData.tagline}</p>
+				</div>
+				<ul class="about-intro__facts">
+					{aboutIntroData.facts.map((fact) => (
+						<li class="about-intro__fact">
+							<span class="about-intro__fact-icon" aria-hidden="true">
+								<Icon icon={fact.icon} width={18} height={18} />
+							</span>
+							<span class="about-intro__fact-text">
+								<span class="about-intro__fact-label">{fact.label}</span>
+								<span class="about-intro__fact-value">{fact.value}</span>
+							</span>
+						</li>
+					))}
+				</ul>
+			</div>
+		</div>
+	</Card>
+</section>
+
+<style lang="stylus">
+@import "../../styles/breakpoints.styl"
+
+.about-intro
+	margin-bottom: var(--m3e-space-4)
+
+	&__layout
+		display: grid
+		grid-template-columns: 8.5rem minmax(0, 1fr)
+		grid-template-areas: "portrait identity" "facts facts"
+		align-items: start
+		column-gap: var(--m3e-space-4)
+		row-gap: var(--m3e-space-4)
+		padding: var(--m3e-space-4)
+		@media (min-width: bp-sm)
+			grid-template-columns: calc(var(--m3e-space-6) * 8) minmax(0, 1fr)
+			grid-template-areas: none
+			align-items: stretch
+			gap: var(--m3e-space-6)
+			padding: var(--m3e-space-6)
+		@media (min-width: bp-lg)
+			grid-template-columns: calc((var(--sidebar-width) - var(--m3e-space-6)) * 0.9) minmax(0, 1fr)
+
+	&__portrait
+		position: relative
+		grid-area: portrait
+		align-self: start
+		aspect-ratio: 1
+		min-width: 0
+		min-height: 0
+		overflow: hidden
+		border-radius: var(--shape-corner-m)
+		@media (min-width: bp-sm)
+			grid-area: auto
+			aspect-ratio: 1
+
+	&__body
+		display: contents
+		@media (min-width: bp-sm)
+			display: flex
+			flex-direction: column
+			justify-content: space-between
+			height: 100%
+			min-width: 0
+
+	&__identity
+		grid-area: identity
+		min-width: 0
+		@media (min-width: bp-sm)
+			grid-area: auto
+
+	&__name
+		margin: 0
+		font: var(--m3e-type-headline-small)
+		font-weight: 700
+		color: var(--on-surface)
+		@media (min-width: bp-lg)
+			font: var(--m3e-type-headline-medium)
+			font-weight: 700
+
+	&__accent
+		display: block
+		width: 2rem
+		height: var(--m3e-space-1)
+		margin: var(--m3e-space-2) 0
+		border-radius: var(--shape-corner-full)
+		background: var(--primary)
+
+	&__tagline
+		margin: 0 0 var(--m3e-space-2)
+		font: var(--m3e-type-body-medium)
+		color: var(--on-surface-variant)
+		@media (min-width: bp-lg)
+			font: var(--m3e-type-body-large)
+
+	&__facts
+		grid-area: facts
+		display: grid
+		grid-template-columns: repeat(2, minmax(0, 1fr))
+		gap: var(--m3e-space-2)
+		margin: 0
+		padding: 0
+		list-style: none
+		@media (max-width: 390px)
+			grid-template-columns: minmax(0, 1fr)
+		@media (min-width: bp-sm)
+			grid-area: auto
+			gap: var(--m3e-space-3)
+			margin-top: var(--m3e-space-2)
+
+	&__fact
+		display: flex
+		align-items: center
+		gap: var(--m3e-space-3)
+		min-width: 0
+		padding: var(--m3e-space-2) var(--m3e-space-3)
+		border-radius: var(--shape-corner-m)
+		background: var(--surface-container)
+		border: 1px solid var(--outline-variant)
+		transition:
+			background-color var(--m3e-duration-short) var(--m3e-easing-standard),
+			border-color var(--m3e-duration-short) var(--m3e-easing-standard)
+		&:hover
+			background: unquote("color-mix(in oklab, var(--primary) 6%, var(--surface-container))")
+			border-color: unquote("color-mix(in oklab, var(--primary) 40%, var(--outline-variant))")
+
+	&__fact-icon
+		display: inline-flex
+		align-items: center
+		justify-content: center
+		flex-shrink: 0
+		width: 2rem
+		height: 2rem
+		border-radius: var(--shape-corner-s)
+		background: var(--primary-container)
+		color: var(--on-primary-container)
+
+	&__fact-text
+		display: block
+		min-width: 0
+
+	&__fact-label
+		display: block
+		font: var(--m3e-type-label-medium)
+		color: var(--on-surface-variant)
+
+	&__fact-value
+		display: block
+		font: var(--m3e-type-body-medium)
+		font-weight: 600
+		color: var(--on-surface)
+		overflow-wrap: break-word
+		@media (min-width: bp-lg)
+			font: var(--m3e-type-body-large)
+			font-weight: 600
+</style>
