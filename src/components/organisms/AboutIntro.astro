@@ -96,14 +96,14 @@ if (typeof avatarAsset !== "string") {
 
 	&__layout
 		display: grid
-		grid-template-columns: 8.5rem minmax(0, 1fr)
+		grid-template-columns: 9.45rem minmax(0, 1fr)
 		grid-template-areas: "portrait identity" "facts facts"
 		align-items: start
-		column-gap: var(--m3e-space-4)
+		column-gap: var(--m3e-space-3)
 		row-gap: var(--m3e-space-4)
 		padding: var(--m3e-space-4)
 		@media (min-width: bp-sm)
-			grid-template-columns: calc(var(--m3e-space-6) * 8) minmax(0, 1fr)
+			grid-template-columns: calc(var(--m3e-space-6) * 9) minmax(0, 1fr)
 			grid-template-areas: none
 			align-items: stretch
 			gap: var(--m3e-space-6)
@@ -171,36 +171,30 @@ if (typeof avatarAsset !== "string") {
 		margin: 0
 		padding: 0
 		list-style: none
-		@media (max-width: 390px)
-			grid-template-columns: minmax(0, 1fr)
 		@media (min-width: bp-sm)
 			grid-area: auto
-			gap: var(--m3e-space-3)
+			gap: var(--m3e-space-4)
 			margin-top: var(--m3e-space-2)
 
 	&__fact
 		display: flex
 		align-items: center
-		gap: var(--m3e-space-3)
+		gap: var(--m3e-space-2)
 		min-width: 0
 		padding: var(--m3e-space-2) var(--m3e-space-3)
 		border-radius: var(--shape-corner-m)
 		background: var(--surface-container)
-		border: 1px solid var(--outline-variant)
-		transition:
-			background-color var(--m3e-duration-short) var(--m3e-easing-standard),
-			border-color var(--m3e-duration-short) var(--m3e-easing-standard)
+		transition: background-color var(--m3e-duration-short) var(--m3e-easing-standard)
 		&:hover
 			background: unquote("color-mix(in oklab, var(--primary) 6%, var(--surface-container))")
-			border-color: unquote("color-mix(in oklab, var(--primary) 40%, var(--outline-variant))")
 
 	&__fact-icon
 		display: inline-flex
 		align-items: center
 		justify-content: center
 		flex-shrink: 0
-		width: 2rem
-		height: 2rem
+		width: 1.75rem
+		height: 1.75rem
 		border-radius: var(--shape-corner-s)
 		background: var(--primary-container)
 		color: var(--on-primary-container)
@@ -211,16 +205,15 @@ if (typeof avatarAsset !== "string") {
 
 	&__fact-label
 		display: block
-		font: var(--m3e-type-label-medium)
+		font: var(--m3e-type-label-large)
 		color: var(--on-surface-variant)
+		@media (min-width: bp-sm)
+			font: var(--m3e-type-label-medium)
 
 	&__fact-value
 		display: block
-		font: var(--m3e-type-body-medium)
-		font-weight: 600
+		font: var(--m3e-type-body-large)
+		font-weight: 500
 		color: var(--on-surface)
 		overflow-wrap: break-word
-		@media (min-width: bp-lg)
-			font: var(--m3e-type-body-large)
-			font-weight: 600
 </style>

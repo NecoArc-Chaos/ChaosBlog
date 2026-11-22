@@ -9,15 +9,7 @@
 
 ## 🎧 正在听
 
-<img
-  data-sp-theme
-  data-sp-base="https://spotify.nachaos.xyz/?spin=true&scan=true&eq_color=rainbow&theme="
-  src="https://spotify.nachaos.xyz/?theme=dark&spin=true&scan=true&eq_color=rainbow"
-  alt="Spotify Now Playing"
-  width="495"
-  height="160"
-  style="max-width: 100%; height: auto; border-radius: 12px;"
-/>
+![Spotify recently played](https://spotify-recently-played.jeffreyca.workers.dev/svg?user=31mintkc4r6vzs3g66kyosepcyyu&unique=1)
 
 ## 💡 一点冷知识
 
