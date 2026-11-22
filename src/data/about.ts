@@ -38,7 +38,7 @@ export const aboutIntroData: AboutIntroData = {
 		{
 			icon: "material-symbols:cake-outline-rounded",
 			label: "生日",
-			value: "2009年1月23日",
+			value: "1月23日",
 		},
 		{
 			icon: "material-symbols:location-on-outline-rounded",
