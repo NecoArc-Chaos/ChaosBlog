@@ -13,6 +13,16 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+if (
+	process.env.GITHUB_REPOSITORY &&
+	process.env.GITHUB_REPOSITORY !== "LyraVoid/Shirone"
+) {
+	console.log(
+		`[shirones-validation] skipping upstream package validation for personal blog (${process.env.GITHUB_REPOSITORY})`,
+	);
+	process.exit(0);
+}
+
 const THEME_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const PIPELINE_REPO = "https://github.com/yCENzh/shirones.git";
 const PIPELINE_COMMIT = "38346f1dea9ea9e2c30e87551807a9ba58707bbf";
