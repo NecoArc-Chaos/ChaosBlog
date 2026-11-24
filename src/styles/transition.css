@@ -40,13 +40,18 @@ html.is-animating .transition-swup-fade {
 }
 
 /* Main components */
+/* M3E Spatial/Effects 分离统一节奏：
+ * 主内容与页脚采用 emphasized-decelerate 减速入场，侧栏采用 expressive 弹簧回弹；
+ * 透明度统一走临界阻尼（Effects），避免过冲闪烁。 */
 .onload-animation {
     opacity: 0;
-    animation: 300ms fade-in-up;
-    animation-fill-mode: forwards;
+    animation:
+        380ms m3e-spatial-slide-up var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)) forwards,
+        220ms m3e-effects-fade-in var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)) forwards;
 }
 #navbar {
-    animation-delay: 0ms
+    animation: 250ms m3e-effects-fade-in var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)) forwards;
+    animation-delay: 0ms;
 }
 #sidebar {
     animation:
@@ -74,6 +79,30 @@ html.is-animating .transition-swup-fade {
 }
 .footer {
     animation-delay: 250ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .onload-animation,
+    #navbar,
+    #sidebar,
+    #sidebar .onload-animation,
+    #sidebar-secondary,
+    #sidebar-secondary .onload-animation {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+html.motion-reduced .onload-animation,
+html.motion-reduced #navbar,
+html.motion-reduced #sidebar,
+html.motion-reduced #sidebar .onload-animation,
+html.motion-reduced #sidebar-secondary,
+html.motion-reduced #sidebar-secondary .onload-animation {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
 }
 
 /* Post content

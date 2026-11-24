@@ -83,6 +83,21 @@ if (typeof avatarAsset !== "string") {
 						</li>
 					))}
 				</ul>
+				{profileConfig.links.length > 0 && (
+					<div class="about-intro__links" aria-label="社交与联系方式">
+						{profileConfig.links.map((item) => (
+							<a
+								href={item.url}
+								target={item.url.startsWith("mailto:") ? undefined : "_blank"}
+								rel={item.url.startsWith("mailto:") ? undefined : "noopener noreferrer me"}
+								class="about-intro__link m3-state-layer"
+							>
+								<Icon icon={item.icon} width={16} height={16} aria-hidden="true" />
+								<span>{item.name}</span>
+							</a>
+						))}
+					</div>
+				)}
 			</div>
 		</div>
 	</Card>
@@ -97,10 +112,10 @@ if (typeof avatarAsset !== "string") {
 	&__layout
 		display: grid
 		grid-template-columns: 9.45rem minmax(0, 1fr)
-		grid-template-areas: "portrait identity" "facts facts"
+		grid-template-areas: "portrait identity" "facts facts" "links links"
 		align-items: start
 		column-gap: var(--m3e-space-3)
-		row-gap: var(--m3e-space-4)
+		row-gap: var(--m3e-space-3)
 		padding: var(--m3e-space-4)
 		@media (min-width: bp-sm)
 			grid-template-columns: calc(var(--m3e-space-6) * 9) minmax(0, 1fr)
@@ -216,4 +231,34 @@ if (typeof avatarAsset !== "string") {
 		font-weight: 500
 		color: var(--on-surface)
 		overflow-wrap: break-word
+
+	&__links
+		grid-area: links
+		display: flex
+		flex-wrap: wrap
+		gap: var(--m3e-space-2)
+		@media (min-width: bp-sm)
+			grid-area: auto
+			margin-top: var(--m3e-space-1)
+
+	&__link
+		display: inline-flex
+		align-items: center
+		gap: 0.375rem
+		height: 2rem
+		padding: 0 var(--m3e-space-3)
+		border-radius: var(--shape-corner-full)
+		background: var(--secondary-container)
+		color: var(--on-secondary-container)
+		font: var(--m3e-type-label-medium)
+		font-weight: 600
+		text-decoration: none
+		transition:
+			background-color var(--m3e-duration-short) var(--m3e-easing-standard),
+			transform var(--m3e-duration-short) var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1))
+		&:hover
+			background: unquote("color-mix(in oklab, var(--on-secondary-container) 10%, var(--secondary-container))")
+			transform: translateY(-1px)
+		&:active
+			transform: scale(0.97)
 </style>

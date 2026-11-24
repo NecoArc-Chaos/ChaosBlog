@@ -9,7 +9,15 @@
 
 ## 🎧 正在听
 
-![Spotify recently played](https://spotify-recently-played.jeffreyca.workers.dev/svg?user=31mintkc4r6vzs3g66kyosepcyyu&unique=1)
+<img
+  data-sp-widget
+  data-sp-fallback-base="https://spotify.nachaos.xyz/?spin=true&scan=true&eq_color=rainbow&theme="
+  src="https://spotify-recently-played.jeffreyca.workers.dev/svg?user=31mintkc4r6vzs3g66kyosepcyyu&unique=1"
+  alt="Spotify recently played"
+  loading="lazy"
+  decoding="async"
+  style="max-width: 100%; height: auto; border-radius: 12px;"
+/>
 
 ## 💡 一点冷知识
 

@@ -69,14 +69,10 @@ const { class: className = "" } = Astro.props;
 	min-width: 0
 	padding: var(--m3e-space-3) var(--m3e-space-4)
 	background: var(--surface-container)
-	border: 1px solid var(--outline-variant)
 	border-radius: var(--shape-corner-m)
-	transition:
-		background-color var(--m3e-duration-short) var(--m3e-easing-standard),
-		border-color var(--m3e-duration-short) var(--m3e-easing-standard)
+	transition: background-color var(--m3e-duration-short) var(--m3e-easing-standard)
 	&:hover
-		background: unquote("color-mix(in oklab, var(--secondary) 6%, var(--surface-container))")
-		border-color: unquote("color-mix(in oklab, var(--secondary) 40%, var(--outline-variant))")
+		background: unquote("color-mix(in oklab, var(--secondary) 8%, var(--surface-container-high))")
 
 	&__header
 		display: flex

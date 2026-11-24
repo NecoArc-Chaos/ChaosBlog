@@ -1,7 +1,6 @@
 /**
  * 设备展示页数据源（纯内容）。
  * 页面展示与筛选规则由 src/config/devicesConfig.ts 控制。
- * 从 Mizuki 迁移：realme GT6 / Pixel 3 / Pixel Watch 3 / insta360 GO 3S
  */
 import type { DeviceItem } from "@/types/devicesConfig";
 
@@ -12,23 +11,11 @@ export const devicesData: DeviceItem[] = [
 		brand: "realme",
 		category: "mobile",
 		status: "active",
-		specs: "骁龙8gen3 / 16G + 512GB",
-		description: "5800mhA Battery, 120W SuperVOOC.",
-		image: "/images/device/realmegt6.png",
+		specs: "骁龙 8 Gen 3 / 16GB + 512GB",
+		description: "5800mAh 大电池搭配 120W 闪充，日常主力使用性能与续航都很稳。",
+		image: "/images/device/realmegt6.webp",
 		featured: true,
 		link: "https://www.realme.com/cn/realme-gt-6",
-	},
-	{
-		id: "pixel-3",
-		name: "Pixel 3",
-		brand: "Google",
-		category: "mobile",
-		status: "backup",
-		specs: "骁龙845 / 4+64 / oled屏幕 / 线性马达",
-		description: "闲鱼花220淘的，pixelos牛福",
-		image:
-			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbOj33XAZiQn1DtNLdEcfEgYmaUPU3b_x3oz2v4t8Thw&s=10",
-		link: "https://zh.wikipedia.org/wiki/Pixel_3",
 	},
 	{
 		id: "pixel-watch-3",
@@ -36,23 +23,34 @@ export const devicesData: DeviceItem[] = [
 		brand: "Google",
 		category: "mobile",
 		status: "active",
-		specs: "Wifi / 45mm / 美版",
+		specs: "Wi-Fi 版 / 45mm / 美版",
 		description:
-			"Pixel Watch 3 的錶徑有45 公釐，螢幕較前一代大40% 以上，無論是運動、使用地圖或處理其他事務，一眼就能掌握更豐富的資訊.",
-		image:
-			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKjYPaNFIYJEXKN7-tYU9u5PQ5slBMfl8RaV1LbjSifg&s=10",
+			"45mm 大表径搭配更窄的黑边，日常查看心率记录、睡眠分析与消息通知一目了然。",
+		image: "/images/device/pixelwatch3.webp",
 		featured: true,
-		link: "https://www.google-mobile.cn/?product=pixel-watch-3",
+		link: "https://store.google.com/product/pixel_watch_3",
+	},
+	{
+		id: "pixel-3",
+		name: "Pixel 3",
+		brand: "Google",
+		category: "mobile",
+		status: "backup",
+		specs: "骁龙 845 / 4GB + 64GB / OLED / 线性马达",
+		description:
+			"闲鱼花 220 元淘来的情怀小屏备用机，刷入 PixelOS 后手感与流畅度依旧在线。",
+		image: "/images/device/pixel3.webp",
+		link: "https://zh.wikipedia.org/wiki/Pixel_3",
 	},
 	{
 		id: "insta360-go-3s",
 		name: "insta360 GO 3S",
 		brand: "Insta360",
-		category: "audio",
+		category: "camera",
 		status: "active",
-		specs: "4K,128G,39g(本体)",
-		description: "拇指相机，要便携有便携，要续航有便携",
-		image: "/images/device/insta360go3s.png",
+		specs: "4K / 128GB / 39g（本体）",
+		description: "轻巧的拇指运动相机，要便携有便携，要续航也很便携。",
+		image: "/images/device/insta360go3s.webp",
 		link: "https://www.insta360.com/product/insta360-go3s",
 	},
 ];

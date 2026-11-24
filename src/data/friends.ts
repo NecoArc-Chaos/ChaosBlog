@@ -14,24 +14,16 @@ export interface FriendItem {
 export const friendsData: FriendItem[] = [
 	{
 		id: 1,
-		title: "Chaos的小站",
-		imgurl: "https://www.nachaos.xyz/assets/images/chaos-avatar.jpg",
-		desc: "调制饮料，改变人生。正在尝试写点有用的",
-		siteurl: "https://www.nachaos.xyz/",
-		tags: ["Friend"],
-	},
-	{
-		id: 2,
 		title: "Nanci的个人主页",
-		imgurl: "https://www.nachaos.xyz/assets/images/nanci-avatar.jpg",
+		imgurl: "/assets/images/nanci-avatar.jpg",
 		desc: "遥看月色亦无痕，夜雨落花沾凡尘",
 		siteurl: "https://blog.thsl.dpdns.org/",
 		tags: ["Friend"],
 	},
 	{
-		id: 3,
+		id: 2,
 		title: "ScophireSpace",
-		imgurl: "https://blog.scophire.space/logo/icon.png",
+		imgurl: "/assets/images/scophire-avatar.png",
 		desc: "Better code, brighter world.",
 		siteurl: "https://blog.scophire.space/",
 		tags: ["Friend"],

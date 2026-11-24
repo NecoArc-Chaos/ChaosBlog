@@ -56,3 +56,44 @@ const aboutPath = url("about/");
         class="onload-animation"
     />
 </MainGridLayout>
+
+<script>
+	function setupSpotifyWidgetFallback() {
+		const imgs = document.querySelectorAll<HTMLImageElement>("img[data-sp-widget]");
+		imgs.forEach((img) => {
+			if (img.dataset.spBound === "true") return;
+			img.dataset.spBound = "true";
+
+			const applyFallback = () => {
+				if (img.dataset.spFallbackDone === "true") {
+					img.style.display = "none";
+					return;
+				}
+				img.dataset.spFallbackDone = "true";
+				const base = img.dataset.spFallbackBase;
+				if (!base) {
+					img.style.display = "none";
+					return;
+				}
+				const isDark = document.documentElement.classList.contains("dark");
+				img.src = `${base}${isDark ? "dark" : "light"}`;
+			};
+
+			img.addEventListener("error", applyFallback);
+
+			// 若主域名因网络环境长时间挂起（超过 4.5s 未完成解码），平滑切换至备用自建卡片
+			if (!img.complete) {
+				window.setTimeout(() => {
+					if (!img.complete || img.naturalWidth === 0) {
+						applyFallback();
+					}
+				}, 4500);
+			} else if (img.naturalWidth === 0) {
+				applyFallback();
+			}
+		});
+	}
+
+	setupSpotifyWidgetFallback();
+	document.addEventListener("swup:content:replace", setupSpotifyWidgetFallback);
+</script>

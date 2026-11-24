@@ -34,7 +34,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		hue: 300, // Default hue 0-360. 沿用旧站紫色
 		fixed: true, // Hide the theme color picker for visitors（旧站即固定色相）
 		// Dynamic Material 3 palette style (TonalSpot/Vibrant/Content/Expressive/Rainbow/FruitSalad/Monochrome/Neutral/Fidelity)
-		style: "tonalSpot",
+		style: "expressive",
 		// Design spec version: "2021" (MD3) or "2025" (M3 Expressive)。角色集一致，
 		// 差异仅在调色板派生（库的 colorSpec 静态为 2025 委托）
 		spec: "2025",
@@ -57,8 +57,8 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		// desktop 用于 >= 1024px；mobile 仅用于 < 1024px 的首页，手机非首页不显示壁纸。
 		// 数组顺序就是轮播顺序；只需要静态 Banner 时，每组保留一张图片即可。
 		src: {
-			desktop: ["assets/images/banner/desktop/dorathy_jill.webp"],
-			mobile: ["assets/images/banner/mobile/dorathy_jill.webp"],
+			desktop: ["/assets/images/banner/desktop/dorathy_jill.webp"],
+			mobile: ["/assets/images/banner/mobile/dorathy_jill.webp"],
 		},
 		// 图片裁切焦点："top"、"center" 或 "bottom"。
 		position: "center",

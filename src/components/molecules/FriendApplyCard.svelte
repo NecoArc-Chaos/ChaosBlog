@@ -1,5 +1,6 @@
 <script lang="ts">
 import Button from "@components/atoms/action/Button.svelte";
+import AccentBar from "@components/atoms/display/AccentBar.svelte";
 import Card from "@components/atoms/display/Card.svelte";
 import Icon from "@iconify/svelte";
 
@@ -53,9 +54,7 @@ function copySiteInfo() {
 <Card color="var(--card-bg)" radius="l" class={`friend-apply-card px-8 py-6 ${className}`}>
 	<div class="friend-apply-card__header">
 		<div class="friend-apply-card__title-row">
-			<span class="friend-apply-card__icon" aria-hidden="true">
-				<Icon icon="material-symbols:add-link-rounded" />
-			</span>
+			<AccentBar size="medium" />
 			<h2 class="friend-apply-card__title">申请友链</h2>
 		</div>
 		<p class="friend-apply-card__subtitle">
@@ -111,7 +110,6 @@ function copySiteInfo() {
 	display: flex
 	flex-direction: column
 	gap: var(--m3e-space-4)
-	border: 1px solid var(--outline-variant)
 
 	&__header
 		display: flex
@@ -122,15 +120,6 @@ function copySiteInfo() {
 		display: flex
 		align-items: center
 		gap: 0.75rem
-
-	&__icon
-		display: flex
-		align-items: center
-		justify-content: center
-		color: var(--primary)
-		> :global(svg)
-			width: 1.75rem
-			height: 1.75rem
 
 	&__title
 		margin: 0
@@ -152,8 +141,7 @@ function copySiteInfo() {
 	&__snippet-box
 		position: relative
 		border-radius: var(--shape-corner-m)
-		background: var(--surface-container-high)
-		border: 1px solid var(--outline-variant)
+		background: var(--surface-container)
 		overflow: hidden
 
 	&__snippet-header
@@ -161,8 +149,7 @@ function copySiteInfo() {
 		align-items: center
 		justify-content: space-between
 		padding: 0.5rem 1rem
-		background: unquote("color-mix(in oklab, var(--on-surface) 4%, var(--surface-container-high))")
-		border-bottom: 1px solid var(--outline-variant)
+		background: var(--surface-container-high)
 
 	&__snippet-label
 		display: inline-flex
@@ -180,23 +167,24 @@ function copySiteInfo() {
 		display: inline-flex
 		align-items: center
 		gap: 0.25rem
-		padding: 0.25rem 0.625rem
-		border: 1px solid var(--outline-variant)
+		padding: 0.25rem 0.75rem
+		border: none
 		border-radius: var(--shape-corner-full)
-		background: var(--surface-container-highest)
-		color: var(--on-surface)
+		background: var(--secondary-container)
+		color: var(--on-secondary-container)
 		font: var(--m3e-type-label-small)
 		font-weight: 600
 		cursor: pointer
 		transition:
 			background-color var(--m3e-duration-short) var(--m3e-easing-standard),
-			border-color var(--m3e-duration-short) var(--m3e-easing-standard)
+			transform var(--m3e-duration-short) var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1))
 		> :global(svg)
 			width: 0.875rem
 			height: 0.875rem
 		&:hover
-			background: unquote("color-mix(in oklab, var(--primary) 10%, var(--surface-container-highest))")
-			border-color: var(--primary)
+			background: unquote("color-mix(in oklab, var(--on-secondary-container) 10%, var(--secondary-container))")
+		&:active
+			transform: scale(0.96)
 
 	&__code
 		margin: 0
