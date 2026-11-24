@@ -45,7 +45,7 @@ export const fabConfig: FabConfig = withUserConfig("fab", {
 			type: "comment",
 			enable: true,
 			devices: ["mobile", "tablet"],
-			pages: ["post"],
+			pages: ["post", "about"],
 		},
 		{
 			type: "home",
