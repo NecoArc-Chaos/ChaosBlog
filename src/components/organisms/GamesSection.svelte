@@ -9,8 +9,7 @@
  */
 import Chips from "@components/atoms/action/Chips.svelte";
 import Card from "@components/atoms/display/Card.svelte";
-import LoadingIndicator from "@components/atoms/feedback/LoadingIndicator.svelte";
-import TextField from "@components/atoms/input/TextField.svelte";
+import CollectionSearchField from "@components/molecules/CollectionSearchField.svelte";
 import GameCard from "@components/molecules/GameCard.svelte";
 import PageHeader from "@components/molecules/PageHeader.svelte";
 import I18nKey from "@i18n/i18nKey";
@@ -34,11 +33,6 @@ let {
 let query = $state("");
 let selectedCategory = $state("");
 let initialized = false;
-
-/** 筛选过渡三段态：loading 展示指示器 → out 指示器淡出 → idle 列表 stagger 揭幕 */
-type FilterPhase = "idle" | "loading" | "out";
-let phase = $state<FilterPhase>("idle");
-let phaseTimers: ReturnType<typeof setTimeout>[] = [];
 
 const enabledItems = $derived(items.filter((item) => item.enable !== false));
 const activeCategories = $derived(
@@ -71,20 +65,6 @@ const filteredItems = $derived.by(() => {
 	});
 });
 
-/** 任一筛选变化：指示器展示 → 淡出 → 网格 stagger 揭幕 */
-function onFilterChange() {
-	phaseTimers.forEach(clearTimeout);
-	phase = "loading";
-	phaseTimers = [
-		setTimeout(() => {
-			phase = "out";
-		}, 300),
-		setTimeout(() => {
-			phase = "idle";
-		}, 300 + 150),
-	];
-}
-
 // URL 参数同步（?category= / ?q=）
 $effect(() => {
 	const c = selectedCategory;
@@ -108,9 +88,6 @@ onMount(() => {
 	selectedCategory = params.get("category") || "";
 	query = params.get("q") || "";
 	initialized = true;
-	return () => {
-		phaseTimers.forEach(clearTimeout);
-	};
 });
 </script>
 
@@ -125,27 +102,11 @@ onMount(() => {
 		<div class="games-section__tools">
 			<div class="games-section__search-row">
 				<div class="games-section__search">
-					<TextField
-						type="search"
+					<CollectionSearchField
 						bind:value={query}
 						placeholder={i18n(I18nKey.gamesSearchPlaceholder)}
 						label={i18n(I18nKey.search)}
-						hideLabel
-						variant="outlined"
-						class="!rounded-(--shape-corner-l)"
-					>
-						<Icon slot="leading" icon="material-symbols:search-rounded" aria-hidden="true" />
-					</TextField>
-					{#if query}
-						<button
-							type="button"
-							class="games-section__search-clear"
-							aria-label={i18n(I18nKey.clear)}
-							onclick={() => (query = "")}
-						>
-							<Icon icon="material-symbols:close-rounded" aria-hidden="true" />
-						</button>
-					{/if}
+					/>
 				</div>
 			</div>
 
@@ -155,7 +116,6 @@ onMount(() => {
 						items={categoryChipItems}
 						variant="filter"
 						bind:value={selectedCategory}
-						onchange={onFilterChange}
 					/>
 				</div>
 				{#if filteredItems.length > 0}
@@ -167,15 +127,7 @@ onMount(() => {
 		</div>
 	{/if}
 
-	{#if phase !== "idle"}
-		<!-- 筛选过渡：contained 指示器展示后淡出，再由网格 stagger 揭幕 -->
-		<div
-			class="games-section__loading"
-			class:games-section__loading--out={phase === "out"}
-		>
-			<LoadingIndicator contained size={64} />
-		</div>
-	{:else if filteredItems.length > 0}
+	{#if filteredItems.length > 0}
 		{#key `${selectedCategory}|${query}`}
 			<div class="games-section__grid" aria-live="polite">
 				{#each filteredItems as game, index (game.id)}
@@ -203,8 +155,8 @@ onMount(() => {
 	&__tools
 		display: flex
 		flex-direction: column
-		gap: 0.75rem
-		padding-bottom: 1.25rem
+		gap: 0.875rem
+		padding-bottom: 1.5rem
 		border-bottom: 1px solid var(--outline-variant)
 
 	&__search-row
@@ -213,35 +165,11 @@ onMount(() => {
 		width: 100%
 
 	&__search
-		position: relative
 		width: 100%
 		max-width: 32rem
 
 		:global(.m3-text-field)
 			width: 100%
-
-	&__search-clear
-		position: absolute
-		right: 0.5rem
-		top: 50%
-		transform: translateY(-50%)
-		display: inline-flex
-		flex-shrink: 0
-		align-items: center
-		justify-content: center
-		width: 1.75rem
-		height: 1.75rem
-		padding: 0.25rem
-		border: none
-		background: none
-		color: var(--on-surface-variant)
-		cursor: pointer
-		border-radius: var(--shape-corner-full)
-		> :global(svg)
-			width: 1.25rem
-			height: 1.25rem
-		&:hover
-			background: unquote("color-mix(in oklab, var(--on-surface-variant) 8%, transparent)")
 
 	&__filter-row
 		display: flex
@@ -265,17 +193,6 @@ onMount(() => {
 		font: var(--m3e-type-body-small)
 		white-space: nowrap
 
-	/* 筛选过渡：大号 contained LoadingIndicator（out = 淡出退场） */
-	&__loading
-		display: flex
-		align-items: center
-		justify-content: center
-		min-height: 11rem
-		padding-top: 1.5rem
-
-		&--out
-			animation: games-loading-out var(--m3e-duration-short) var(--m3e-easing-emphasized-accelerate) both
-
 	&__empty
 		display: flex
 		flex-direction: column
@@ -297,18 +214,9 @@ onMount(() => {
 		display: grid
 		grid-template-columns: minmax(0, 1fr)
 		gap: var(--m3e-space-4)
-		margin-top: 1.25rem
+		margin-top: 1.5rem
 		align-items: stretch
 
 		@media (min-width: bp-md)
 			grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr))
-
-/* 指示器退场：淡出 + 轻微收拢（reduced-motion 由全局规则压至终态） */
-@keyframes games-loading-out
-	from
-		opacity: 1
-		transform: none
-	to
-		opacity: 0
-		transform: scale(0.96)
 </style>

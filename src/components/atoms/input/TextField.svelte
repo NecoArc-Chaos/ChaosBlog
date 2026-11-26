@@ -101,11 +101,11 @@ let focused = $state(false);
     gap: 0.75rem
     width: 100%
     min-width: 0
-    height: 3rem
+    height: calc(3rem + var(--m3e-density, 0) * 4px)
     box-sizing: border-box
     color: var(--on-surface)
     font: var(--m3e-type-body-large)
-    transition: background-color var(--m3e-duration-short) var(--m3e-easing-standard), border-color var(--m3e-duration-short) var(--m3e-easing-standard)
+    transition: background-color var(--m3e-duration-short) var(--m3e-easing-standard), border-color var(--m3e-duration-short) var(--m3e-easing-standard), box-shadow var(--m3e-duration-short) var(--m3e-easing-standard)
 
     /* ===== filled（默认）：--field-filled-bg + 底部下划线 ===== */
     &--filled
@@ -117,17 +117,17 @@ let focused = $state(false);
         &:focus-within
             background: unquote("color-mix(in oklab, var(--on-surface) 16%, var(--field-filled-bg))")
 
-    /* ===== outlined：surface + 边框线 ===== */
+    /* ===== outlined：surface + 1px 描边 + inset 聚焦环（消除 1px→2px 边框宽度抖动） ===== */
     &--outlined
         padding: 0 1rem
-        border-radius: var(--shape-corner-xs)
+        border-radius: var(--shape-corner-m)
         border: 1px solid var(--outline-variant)
         background: var(--surface)
         &:hover
             border-color: var(--outline)
         &:focus-within
             border-color: var(--primary)
-            border-width: 2px
+            box-shadow: inset 0 0 0 1px var(--primary)
 
     /* 错误态：下划线/边框变 error */
     &--error.m3-text-field--filled &__underline
@@ -137,7 +137,7 @@ let focused = $state(false);
 
     &--error.m3-text-field--outlined
         border-color: var(--error)
-        border-width: 2px
+        box-shadow: inset 0 0 0 1px var(--error)
         &:hover
             border-color: var(--error)
 

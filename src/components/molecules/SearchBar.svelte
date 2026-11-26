@@ -53,28 +53,44 @@ const handleFocus = (): void => {
     <div
         class="m3-state-layer absolute right-0 top-0 flex items-center overflow-hidden rounded-full h-10 top-app-bar__search-shell
                {expanded ? 'top-app-bar__search-shell--expanded w-48 bg-(--surface-container-high)' : 'w-10 bg-transparent'}"
-        style="transition: width var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate), background-color var(--m3e-duration-short) var(--m3e-easing-standard);"
-        onclick={() => {
-            if (!expanded) expand();
-        }}
+        style="transition: width var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1)), background-color var(--m3e-duration-short) var(--m3e-easing-standard);"
     >
-        <Icon
-            icon="material-symbols:search"
-            class="pointer-events-none shrink-0 text-[1.25rem] transition-colors duration-[var(--m3e-duration-short)]
-                   {expanded
-                       ? 'ml-3 text-[var(--on-surface-variant)]'
-                       : 'mx-auto text-[var(--on-surface)]'}"
-        ></Icon>
+        {#if !expanded}
+            <button
+                type="button"
+                aria-label={placeholder || "Search"}
+                aria-expanded="false"
+                onclick={expand}
+                class="w-10 h-10 flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer text-[var(--on-surface)] focus-visible:outline-2 focus-visible:outline-[var(--primary)] focus-visible:outline-offset-[-2px] rounded-full"
+            >
+                <Icon
+                    icon="material-symbols:search"
+                    class="pointer-events-none shrink-0 text-[1.25rem]"
+                ></Icon>
+            </button>
+        {:else}
+            <Icon
+                icon="material-symbols:search"
+                class="pointer-events-none shrink-0 text-[1.25rem] ml-3 text-[var(--on-surface-variant)] transition-colors duration-[var(--m3e-duration-short)]"
+            ></Icon>
+        {/if}
         <input
             {id}
             {name}
             {placeholder}
+            aria-label={placeholder || "Search"}
             bind:value
             tabindex={expanded ? 0 : -1}
             onfocus={handleFocus}
             onblur={handleBlur}
+            onkeydown={(e) => {
+                if (e.key === "Escape") {
+                    expanded = false;
+                    oncollapse();
+                }
+            }}
             class="h-full bg-transparent outline-0 text-(--on-surface) caret-(--primary) transition-opacity duration-[var(--m3e-duration-short)]
-                   {expanded ? 'w-32 pl-2 opacity-100' : 'w-0 opacity-0'}"
+                   {expanded ? 'w-32 pl-2 opacity-100' : 'w-0 opacity-0 pointer-events-none'}"
         />
     </div>
 </div>

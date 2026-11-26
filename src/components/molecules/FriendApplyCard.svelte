@@ -164,6 +164,7 @@ function copySiteInfo() {
 			color: var(--primary)
 
 	&__copy-btn
+		position: relative
 		display: inline-flex
 		align-items: center
 		gap: 0.25rem
@@ -185,6 +186,12 @@ function copySiteInfo() {
 			background: unquote("color-mix(in oklab, var(--on-secondary-container) 10%, var(--secondary-container))")
 		&:active
 			transform: scale(0.96)
+		@media (pointer: coarse)
+			&::after
+				content: ""
+				position: absolute
+				inset-block: -10px
+				inset-inline: -6px
 
 	&__code
 		margin: 0

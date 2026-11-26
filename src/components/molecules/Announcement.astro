@@ -1,5 +1,7 @@
 ---
-import Icon from "@iconify/svelte";
+import Banner, {
+	type BannerAction,
+} from "@components/atoms/overlay/Banner.svelte";
 import { announcementConfig } from "@/config/announcementConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -15,15 +17,43 @@ const className = Astro.props.class;
 const style = Astro.props.style;
 const contentText = config.content || config.text || "";
 const link = config.link;
-const hasLink = link && link.enable !== false && link.text && link.url;
-const isExternal =
-	hasLink &&
-	(link.external === true ||
-		(/^https?:\/\//i.test(link.url) && link.external !== false));
+const hasLink = Boolean(link && link.enable !== false && link.text && link.url);
+const isExternal = Boolean(
+	link &&
+		hasLink &&
+		(link.external === true ||
+			(/^https?:\/\//i.test(link.url) && link.external !== false)),
+);
 const closeDuration = Number(config.closeDuration ?? 86400);
+
+const actions: BannerAction[] = [
+	...(hasLink && link
+		? [
+				{
+					label: link.text,
+					href: link.url,
+					target: isExternal ? "_blank" : "_self",
+					rel: isExternal ? "noopener noreferrer" : undefined,
+					icon: isExternal
+						? "material-symbols:arrow-outward-rounded"
+						: undefined,
+				},
+			]
+		: []),
+	...(config.closable
+		? [
+				{
+					label: "",
+					icon: "material-symbols:close-rounded",
+					ariaLabel: i18n(I18nKey.announcementClose),
+					class: "announcement-close-btn",
+				},
+			]
+		: []),
+];
 ---
 
-<!-- 组件显示由 sidebarConfig 统一控制，有内容时渲染 -->
+<!-- 组件显示由 sidebarConfig 统一控制，有内容时渲染；内部复用 M3E Banner 原子 -->
 {contentText && (
 	<WidgetLayout
 		name={config.title || i18n(I18nKey.announcement)}
@@ -31,108 +61,32 @@ const closeDuration = Number(config.closeDuration ?? 86400);
 		class={className}
 		style={style}
 	>
-		<div class="announcement-wrapper flex flex-col" data-close-duration={String(closeDuration)}>
-			<!-- 公告栏内容 -->
-			<div class="announcement-content">
-				{contentText}
-			</div>
-
-			<!-- 可选链接和关闭按钮 -->
-			{(hasLink || config.closable) && (
-				<div class="announcement-actions">
-					<div>
-						{hasLink && (
-							<a
-								href={link.url}
-								target={isExternal ? "_blank" : "_self"}
-								rel={isExternal ? "noopener noreferrer" : undefined}
-								class="announcement-btn m3-state-layer"
-							>
-								<span>{link.text}</span>
-								{isExternal && (
-									<Icon icon="material-symbols:arrow-outward-rounded"
-										class="announcement-btn__icon"
-									/>
-								)}
-							</a>
-						)}
-					</div>
-
-					{config.closable && (
-						<button
-							type="button"
-							class="announcement-close-btn m3-state-layer"
-							onclick="closeAnnouncement()"
-							aria-label={i18n(I18nKey.announcementClose)}
-							title={i18n(I18nKey.announcementClose)}
-						>
-							<Icon icon="material-symbols:close-rounded" class="announcement-close-btn__icon" />
-						</button>
-					)}
-				</div>
-			)}
+		<div class="announcement-wrapper" data-close-duration={String(closeDuration)}>
+			<Banner
+				text={contentText}
+				shape="round"
+				compact
+				actions={actions}
+				class="announcement-banner"
+			/>
 		</div>
 	</WidgetLayout>
 )}
 
 <style lang="stylus">
-.announcement-content
-	font: var(--m3e-type-body-medium)
-	color: var(--on-surface-variant)
-	line-height: 1.6
-	margin-bottom: var(--m3e-space-3)
-	word-break: break-word
-	white-space: pre-line
+.announcement-wrapper
+	:global(.announcement-banner)
+		flex-wrap: wrap
+		row-gap: var(--m3e-space-2)
+		box-shadow: none
+		background: var(--surface-container)
+		border-radius: var(--shape-corner-m)
 
-.announcement-actions
-	display: flex
-	align-items: center
-	justify-content: space-between
-	gap: var(--m3e-space-3)
+	:global(.m3-banner__text)
+		white-space: pre-line
 
-.announcement-btn
-	display: inline-flex
-	align-items: center
-	gap: var(--m3e-space-1)
-	height: 2rem
-	padding: 0 var(--m3e-space-3)
-	border-radius: var(--shape-corner-m)
-	background: var(--secondary-container)
-	color: var(--on-secondary-container)
-	font: var(--m3e-type-label-medium)
-	font-weight: 500
-	text-decoration: none
-	--m3e-state-color: var(--on-secondary-container)
-	transition: background-color var(--m3e-duration-short) var(--m3e-easing-standard)
-
-	&__icon
-		width: 1rem
-		height: 1rem
-		opacity: 0.8
-
-.announcement-close-btn
-	display: flex
-	align-items: center
-	justify-content: center
-	width: 2rem
-	height: 2rem
-	border-radius: var(--shape-corner-full)
-	background: var(--btn-regular-bg)
-	color: var(--on-surface-variant)
-	cursor: pointer
-	border: none
-	--m3e-state-color: var(--error)
-	transition:
-		color var(--m3e-duration-short) var(--m3e-easing-standard),
-		background-color var(--m3e-duration-short) var(--m3e-easing-standard)
-
-	&:hover
-		color: var(--error)
-		background: var(--error-container)
-
-	&__icon
-		width: 1.125rem
-		height: 1.125rem
+	:global(.m3-banner__actions)
+		margin-left: auto
 </style>
 
 <script>
@@ -170,6 +124,14 @@ const closeDuration = Number(config.closeDuration ?? 86400);
 			'widget-layout[data-id="announcement"]',
 		);
 		if (widgetLayouts.length === 0) return;
+
+		widgetLayouts.forEach((widget) => {
+			const btn = widget.querySelector<HTMLElement>(".announcement-close-btn");
+			if (btn && btn.dataset.announcementBound !== "true") {
+				btn.dataset.announcementBound = "true";
+				btn.addEventListener("click", closeAnnouncement);
+			}
+		});
 
 		const wrapper = document.querySelector<HTMLElement>(".announcement-wrapper");
 		const durationAttr = wrapper?.getAttribute("data-close-duration");

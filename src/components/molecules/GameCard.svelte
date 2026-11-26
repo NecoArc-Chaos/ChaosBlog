@@ -145,7 +145,7 @@ const ratingLabel = $derived(
 		<div class="game-card__footer">
 			{#if game.link}
 				<a
-					class="game-card__link"
+					class="game-card__link m3-state-layer"
 					href={game.link}
 					target="_blank"
 					rel="noopener noreferrer"
@@ -165,25 +165,23 @@ const ratingLabel = $derived(
 	display: flex
 	flex-direction: column
 	overflow: hidden
-	background: var(--card-bg)
-	border: 1px solid var(--outline-variant)
+	background: var(--nested-card-bg, var(--card-bg))
+	box-shadow: var(--m3e-elevation-1)
 	border-radius: var(--shape-corner-l)
 	transition:
-		border-color var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		background-color var(--m3e-duration-medium) var(--m3e-easing-standard)
 
 	&:hover
-		border-color: var(--outline)
 		box-shadow: var(--m3e-elevation-2)
 		transform: translateY(-2px)
 		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
 
 	&--featured
-		border-color: unquote("color-mix(in oklab, var(--tertiary) 40%, var(--outline-variant))")
+		box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--tertiary) 36%, transparent)"), var(--m3e-elevation-1)
 		&:hover
-			border-color: var(--tertiary)
+			box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--tertiary) 62%, transparent)"), var(--m3e-elevation-2)
 
 	/* ── 横幅：16:9 横屏封面主视觉 ── */
 	&__banner
@@ -447,12 +445,12 @@ const ratingLabel = $derived(
 		padding: 0.3125rem 0.75rem
 		min-height: 2.25rem
 		border-radius: var(--shape-corner-m)
-		background: unquote("color-mix(in oklab, var(--primary) 8%, transparent)")
+		background: unquote("color-mix(in oklab, var(--primary) 10%, transparent)")
 		color: var(--primary)
+		--m3e-state-color: var(--primary)
 		font: var(--m3e-type-label-medium)
 		font-weight: 600
 		text-decoration: none
-		border: 1px solid unquote("color-mix(in oklab, var(--primary) 16%, transparent)")
 		transition:
 			background-color var(--m3e-duration-short) var(--m3e-easing-standard),
 			box-shadow var(--m3e-duration-short) var(--m3e-easing-standard),
@@ -462,6 +460,10 @@ const ratingLabel = $derived(
 			background: unquote("color-mix(in oklab, var(--primary) 16%, transparent)")
 			box-shadow: var(--m3e-elevation-1)
 			transform: translateY(-1px)
+
+		&:focus-visible
+			outline: 2px solid var(--primary)
+			outline-offset: 2px
 
 		> :global(svg)
 			width: 1rem

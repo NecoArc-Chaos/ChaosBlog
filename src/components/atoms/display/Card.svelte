@@ -97,7 +97,7 @@ const styleVars = [
 
 <style lang="stylus">
 .m3-card
-    --m3-card-bg: var(--surface-container-highest)
+    --m3-card-bg: var(--card-bg)
     display: block
     box-sizing: border-box
     border-radius: var(--m3-card-radius, var(--shape-corner-m))

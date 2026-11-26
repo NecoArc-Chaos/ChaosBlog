@@ -1,13 +1,13 @@
 <script lang="ts">
 import Chips from "@components/atoms/action/Chips.svelte";
 import Card from "@components/atoms/display/Card.svelte";
-import LoadingIndicator from "@components/atoms/feedback/LoadingIndicator.svelte";
-import TextField from "@components/atoms/input/TextField.svelte";
 import AlbumCard from "@components/molecules/AlbumCard.svelte";
+import CollectionSearchField from "@components/molecules/CollectionSearchField.svelte";
 import PageHeader from "@components/molecules/PageHeader.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
+import { reveal } from "@utils/motion";
 import { onMount } from "svelte";
 import type { AlbumIndexItem } from "@/types/album";
 
@@ -23,9 +23,6 @@ let {
 let query = $state("");
 let selectedTag = $state("");
 let initialized = false;
-type FilterPhase = "idle" | "loading" | "out";
-let phase = $state<FilterPhase>("idle");
-let phaseTimers: ReturnType<typeof setTimeout>[] = [];
 
 const tagItems = $derived(
 	Array.from(new Set(albums.flatMap((album) => album.tags)))
@@ -44,15 +41,6 @@ const filtered = $derived.by(() => {
 			.includes(normalized);
 	});
 });
-
-function onTagChange() {
-	phaseTimers.forEach(clearTimeout);
-	phase = "loading";
-	phaseTimers = [
-		setTimeout(() => (phase = "out"), 300),
-		setTimeout(() => (phase = "idle"), 450),
-	];
-}
 
 $effect(() => {
 	if (!initialized) return;
@@ -74,7 +62,6 @@ onMount(() => {
 	query = params.get("q") || "";
 	selectedTag = params.get("albumTag") || "";
 	initialized = true;
-	return () => phaseTimers.forEach(clearTimeout);
 });
 </script>
 
@@ -88,30 +75,14 @@ onMount(() => {
 	{#if albums.length > 0}
 		<div class="album-section__tools">
 			<div class="album-section__search">
-				<TextField
-					type="search"
+				<CollectionSearchField
 					bind:value={query}
 					placeholder={i18n(I18nKey.search)}
 					label={i18n(I18nKey.search)}
-					hideLabel
-					variant="outlined"
-					class="!rounded-(--shape-corner-l)"
-				>
-					<Icon slot="leading" icon="material-symbols:search-rounded" aria-hidden="true" />
-				</TextField>
-				{#if query}
-					<button
-						type="button"
-						class="album-section__clear"
-						aria-label={i18n(I18nKey.clear)}
-						onclick={() => (query = "")}
-					>
-						<Icon icon="material-symbols:close-rounded" aria-hidden="true" />
-					</button>
-				{/if}
+				/>
 			</div>
 			{#if tagItems.length > 0}
-				<Chips items={tagItems} variant="filter" bind:value={selectedTag} onchange={onTagChange} />
+				<Chips items={tagItems} variant="filter" bind:value={selectedTag} />
 			{/if}
 			<p class="album-section__count" aria-live="polite">
 				{filtered.length} {i18n(I18nKey.albumsCounts)}
@@ -119,18 +90,16 @@ onMount(() => {
 		</div>
 	{/if}
 
-	{#if phase !== "idle"}
-		<div class="album-section__loading" class:album-section__loading--out={phase === "out"}>
-			<LoadingIndicator contained size={64} />
-		</div>
-	{:else if filtered.length > 0}
-		<div class="album-section__grid">
-			{#each filtered as album, index (album.id)}
-				<div class="album-section__item" style={`--album-delay: ${Math.min(index, 7) * 45}ms`}>
-					<AlbumCard {album} />
-				</div>
-			{/each}
-		</div>
+	{#if filtered.length > 0}
+		{#key `${query}|${selectedTag}`}
+			<div class="album-section__grid">
+				{#each filtered as album, index (album.id)}
+					<div class="album-section__item" use:reveal={{ delay: Math.min(index, 7) * 45 }}>
+						<AlbumCard {album} />
+					</div>
+				{/each}
+			</div>
+		{/key}
 	{:else}
 		<div class="album-section__empty">
 			<Icon icon="material-symbols:search-off-rounded" aria-hidden="true" />
@@ -148,29 +117,10 @@ onMount(() => {
 		padding-bottom: 1.5rem
 		border-bottom: 1px solid var(--outline-variant)
 	&__search
-		position: relative
 		width: 100%
 		max-width: 32rem
 		:global(.m3-text-field)
 			width: 100%
-	&__clear
-		position: absolute
-		right: 0.5rem
-		top: 50%
-		display: grid
-		place-items: center
-		width: 1.75rem
-		height: 1.75rem
-		padding: 0.25rem
-		transform: translateY(-50%)
-		border: 0
-		border-radius: var(--shape-corner-full)
-		background: transparent
-		color: var(--on-surface-variant)
-		cursor: pointer
-		> :global(svg)
-			width: 1.25rem
-			height: 1.25rem
 	&__count
 		margin: 0
 		color: var(--on-surface-variant)
@@ -186,17 +136,6 @@ onMount(() => {
 			grid-template-columns: repeat(3, minmax(0, 1fr))
 	&__item
 		min-width: 0
-		animation: album-card-in var(--m3e-duration-long) var(--m3e-easing-emphasized-decelerate) both
-		animation-delay: var(--album-delay)
-	&__loading
-		display: grid
-		place-items: center
-		min-height: 12rem
-		padding-top: 1.5rem
-		opacity: 1
-		transition: opacity var(--m3e-duration-short) var(--m3e-easing-standard)
-		&--out
-			opacity: 0
 	&__empty
 		display: grid
 		place-items: center
@@ -208,24 +147,4 @@ onMount(() => {
 		> :global(svg)
 			width: 2rem
 			height: 2rem
-
-@keyframes album-card-in
-	from
-		opacity: 0
-		transform: translateY(0.5rem)
-	to
-		opacity: 1
-		transform: translateY(0)
-
-:global(html.motion-reduced) .album-section__item
-	animation: none
-
-:global(html.motion-reduced) .album-section__loading
-	transition: none
-
-@media (prefers-reduced-motion: reduce)
-	.album-section__item
-		animation: none
-	.album-section__loading
-		transition: none
 </style>

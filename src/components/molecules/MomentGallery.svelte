@@ -380,7 +380,6 @@ $effect(() => {
 	padding: 0.75rem
 	border-radius: var(--shape-corner-l)
 	background: var(--surface-container-low)
-	border: 1px solid var(--outline-variant)
 	outline: none
 	animation: moment-viewer-in var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate)
 

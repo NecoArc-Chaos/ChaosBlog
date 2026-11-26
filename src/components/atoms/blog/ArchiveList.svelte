@@ -199,6 +199,7 @@ function toggleGroup(id: string) {
 	&__count
 		font: var(--m3e-type-body-small)
 		color: var(--on-surface-variant)
+		font-variant-numeric: tabular-nums
 
 	&__chevron
 		display: inline-flex
@@ -254,6 +255,7 @@ function toggleGroup(id: string) {
 		width: 4rem
 		font: var(--m3e-type-body-small)
 		color: var(--on-surface-variant)
+		font-variant-numeric: tabular-nums
 
 	&__node
 		flex-shrink: 0

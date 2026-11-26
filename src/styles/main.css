@@ -160,6 +160,24 @@
     @apply cursor-zoom-in
 }
 
+/* 暗色模式下适度降低展示型图片峰值亮度，减轻夜间高白底视觉眩光，悬停还原 */
+html.dark .m3-blog-postcard__cover img,
+html.dark .game-card__cover,
+html.dark .anime-card__cover-img,
+html.dark .album-card__cover img,
+html.dark .moment-card__tile img {
+    filter: brightness(0.92);
+    transition: filter var(--m3e-duration-short) var(--m3e-easing-standard), transform var(--m3e-duration-long) var(--m3e-easing-emphasized-decelerate), opacity var(--m3e-duration-short) var(--m3e-easing-standard);
+}
+
+html.dark .m3-blog-postcard:hover .m3-blog-postcard__cover img,
+html.dark .game-card:hover .game-card__cover,
+html.dark .anime-card:hover .anime-card__cover-img,
+html.dark .album-card:hover .album-card__cover img,
+html.dark .moment-card__tile:hover img {
+    filter: brightness(1);
+}
+
 ::selection {
     background-color: var(--selection-bg)
 }

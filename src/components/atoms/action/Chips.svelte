@@ -154,6 +154,7 @@ function handleRemove(item: ChipItem) {
 	gap: var(--m3e-chip-gap, 0.5rem)
 
 .m3-chip
+	position: relative
 	display: inline-flex
 	flex-shrink: 0
 	align-items: center
@@ -170,6 +171,25 @@ function handleRemove(item: ChipItem) {
 	cursor: pointer
 	user-select: none
 	--m3e-state-color: var(--on-surface)
+	transition:
+		background-color var(--m3e-duration-short) var(--m3e-easing-standard),
+		color var(--m3e-duration-short) var(--m3e-easing-standard),
+		border-color var(--m3e-duration-short) var(--m3e-easing-standard),
+		border-radius var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1)),
+		transform var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1))
+
+	/* MD3E Shape Morphing：按压收敛，选中展开为全圆胶囊 */
+	&:active:not(.m3-chip--disabled)
+		border-radius: 6px
+		transform: scale(0.97)
+
+	/* 粗指针设备（触屏）扩展垂直热区至 48dp，不撑高可视布局 */
+	@media (pointer: coarse)
+		&::after
+			content: ""
+			position: absolute
+			inset-block: -8px
+			inset-inline: 0
 
 	&--disabled
 		opacity: 0.38
@@ -210,6 +230,7 @@ function handleRemove(item: ChipItem) {
 
 	&--filter, &--input
 		&.m3-chip--selected
+			border-radius: var(--shape-corner-full)
 			background: var(--secondary-container)
 			color: var(--on-secondary-container)
 			border-color: transparent

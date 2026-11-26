@@ -103,7 +103,7 @@ const threeLine = $derived(!!overLine && !!supporting);
     align-items: center
     gap: 16px
     width: 100%
-    min-height: 56px
+    min-height: calc(56px + var(--m3e-density, 0) * 4px)
     box-sizing: border-box
     padding: 8px 16px
     border: none
@@ -116,10 +116,10 @@ const threeLine = $derived(!!overLine && !!supporting);
     transition: background-color var(--m3e-duration-short) var(--m3e-easing-standard)
 
     &--two-line
-        min-height: 72px
+        min-height: calc(72px + var(--m3e-density, 0) * 4px)
 
     &--three-line
-        min-height: 88px
+        min-height: calc(88px + var(--m3e-density, 0) * 4px)
 
     &--selected
         background: var(--secondary-container)

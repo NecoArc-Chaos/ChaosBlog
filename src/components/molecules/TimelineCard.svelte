@@ -232,11 +232,10 @@ const markerIcon = $derived(
 		margin-bottom: 1.5rem
 		padding: 1.25rem 1.5rem
 		box-sizing: border-box
-		border: 1px solid var(--outline-variant)
+		box-shadow: var(--m3e-elevation-1)
 		border-radius: var(--shape-corner-l)
-		background: var(--card-bg)
+		background: var(--nested-card-bg, var(--card-bg))
 		transition:
-			border-color var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 			box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 			background-color var(--m3e-duration-medium) var(--m3e-easing-standard)
 
@@ -245,15 +244,14 @@ const markerIcon = $derived(
 			margin-bottom: 1rem
 
 	&:hover &__body
-		border-color: var(--outline)
-		box-shadow: var(--m3e-elevation-1)
+		box-shadow: var(--m3e-elevation-2)
 		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
 
 	&--featured &__body
-		border-color: unquote("color-mix(in oklab, var(--primary) 40%, var(--outline-variant))")
+		box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 32%, transparent)"), var(--m3e-elevation-1)
 
 	&--featured:hover &__body
-		border-color: var(--primary)
+		box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 55%, transparent)"), var(--m3e-elevation-2)
 
 	/* 元数据栏 */
 	&__meta-bar
@@ -411,6 +409,10 @@ const markerIcon = $derived(
 
 		&:hover
 			text-decoration: underline
+
+		&:focus-visible
+			outline: 2px solid var(--primary)
+			outline-offset: 2px
 
 		> :global(svg)
 			width: 1rem

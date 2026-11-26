@@ -55,13 +55,14 @@ let { album }: { album: AlbumIndexItem } = $props();
 .album-card
 	min-width: 0
 	overflow: hidden
-	border: 1px solid var(--outline-variant)
 	border-radius: var(--shape-corner-l)
-	background: var(--card-bg)
-	transition: border-color var(--m3e-duration-medium) var(--m3e-easing-standard), box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate)
+	background: var(--nested-card-bg, var(--card-bg))
+	box-shadow: var(--m3e-elevation-1)
+	transition: box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate), transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate), background-color var(--m3e-duration-medium) var(--m3e-easing-standard)
 	&:hover
-		border-color: var(--outline)
-		box-shadow: var(--m3e-elevation-1)
+		box-shadow: var(--m3e-elevation-2)
+		transform: translateY(-2px)
+		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
 	&__link
 		display: block
 		color: inherit

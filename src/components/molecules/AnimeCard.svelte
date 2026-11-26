@@ -77,7 +77,7 @@ const metaLine = $derived(
 
 	{#if anime.link}
 		<a
-			class="anime-card__cover"
+			class="anime-card__cover m3-state-layer"
 			href={anime.link}
 			target="_blank"
 			rel="noopener noreferrer"
@@ -142,16 +142,16 @@ const metaLine = $derived(
 	box-sizing: border-box
 	overflow: hidden
 	border-radius: var(--shape-corner-l)
-	background: var(--card-bg)
-	border: 1px solid var(--outline-variant)
+	background: var(--nested-card-bg, var(--card-bg))
+	box-shadow: var(--m3e-elevation-1)
 	transition:
-		border-color var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
-		transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate)
+		transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
+		background-color var(--m3e-duration-medium) var(--m3e-easing-standard)
 	&:hover
-		border-color: var(--outline)
 		box-shadow: var(--m3e-elevation-2)
 		transform: translateY(-2px)
+		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
 
 	/* 2:3 海报封面：渐变占位同时充当图片加载背景 */
 	&__cover
@@ -255,7 +255,7 @@ const metaLine = $derived(
 		> :global(svg)
 			width: 0.875rem
 			height: 0.875rem
-			color: #facc15
+			color: unquote("color-mix(in oklab, var(--tertiary) 45%, #fff)")
 
 	&__body
 		display: flex

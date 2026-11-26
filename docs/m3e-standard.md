@@ -64,6 +64,7 @@ variables.styl  --mc-* → 语义令牌（--primary、--surface-container-low…
 |---|---|
 | `--page-bg` | 页面背景（light: container-low / dark: surface） |
 | `--card-bg` | 卡片背景（light: container-lowest / dark: container-high） |
+| `--nested-card-bg` | 卡片容器内部的嵌套子卡片背景（light: container-low / dark: container-highest 混色），以纯 Tonal 色阶取代硬边框 |
 | `--float-panel-bg` | 浮层面板背景（container） |
 | `--field-filled-bg` | 填充输入框容器（light: container-high / dark: surface-bright，避开暗色卡片的 container-high） |
 | `--btn-regular-bg/-hover/-active` | 常规按钮的层级渐升（container-low → container → high → highest） |
@@ -96,11 +97,14 @@ variables.styl  --mc-* → 语义令牌（--primary、--surface-container-low…
 | 令牌 | 值 |
 |---|---|
 | `--m3e-duration-short / medium / long` | 150ms / 250ms / 400ms |
+| `--m3e-duration-spring-fast / default / slow` | 340ms / 480ms / 560ms（MD3E 弹簧物理位移） |
+| `--m3e-duration-effects-fast / default / slow` | 150ms / 220ms / 320ms（MD3E 临界阻尼透明度/色彩） |
 | `--m3e-duration-ambient-short / medium / long / extra-long` | 7s / 10s / 13s / 18s（仅持续环境装饰，不用于交互反馈） |
 | `--m3e-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` |
 | `--m3e-easing-emphasized` | `cubic-bezier(0.2, 0, 0, 1)` |
 | `--m3e-easing-emphasized-decelerate` | `cubic-bezier(0.05, 0.7, 0.1, 1)` |
 | `--m3e-easing-emphasized-accelerate` | `cubic-bezier(0.3, 0, 0.8, 0.15)` |
+| `--m3e-easing-spring-fast / default / slow` | 支持 `@supports` 时升级为物理阻尼 `linear(...)` 弹簧曲线，旧浏览器平滑回退到 `cubic-bezier` |
 
 ### 3.4 高度（tonal elevation）
 

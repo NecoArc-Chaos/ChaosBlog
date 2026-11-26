@@ -109,7 +109,7 @@ export const musicSidebarStylus = `
 			&::after
 				content: ""
 				position: absolute
-				inset: -0.5rem
+				inset: -0.75rem
 				z-index: 1
 
 			&:hover

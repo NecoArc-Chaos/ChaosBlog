@@ -7,13 +7,24 @@ import Icon from "@iconify/svelte";
  * - 标准形态：单行 52px（无图标）/ 带图标 72px / 多行自适应增高，吻合官方 token；
  * - compact 紧凑形态：圆角 + 图标 + 多操作也能保持单行小高度（约 52px），适合提示条/内嵌横幅场景；
  * - 可选 leading 图标：标准 40px 圆形 primary 24px / compact 24px 圆形 primary 16px；
- * - actions：TextButton 风格（label-large primary、state layer），右侧排列；
+ * - actions：TextButton 风格（label-large primary、state layer），支持 href 外链或 button 点击；
  * - 通用场景：公告、Cookie 提示、离线提醒、新版本发布等。
  */
+export interface BannerAction {
+	label: string;
+	href?: string;
+	target?: string;
+	rel?: string;
+	icon?: string;
+	ariaLabel?: string;
+	class?: string;
+	onClick?: () => void;
+}
+
 let {
 	text = "",
 	icon = "",
-	actions = [] as { label: string; onClick?: () => void }[],
+	actions = [] as BannerAction[],
 	shape = "square",
 	compact = false,
 	class: className = "",
@@ -23,7 +34,7 @@ let {
 	/** 可选 leading 图标（Iconify 名；标准 40px 圆形 primary 24px / compact 24px 圆形 primary 16px） */
 	icon?: string;
 	/** 操作按钮（TextButton 风格，label-large primary，最多 2 个） */
-	actions?: { label: string; onClick?: () => void }[];
+	actions?: BannerAction[];
 	/** 容器圆角：square（默认，标准方角）/ round（最新版 28px） */
 	shape?: "square" | "round";
 	/** 紧凑形态：图标/内边距缩小，单行小高度（约 52px）也能放下图标 + 多个操作 */
@@ -41,14 +52,36 @@ let {
 	<p class="m3-banner__text">{text}</p>
 	{#if actions.length}
 		<div class="m3-banner__actions">
-			{#each actions as action (action.label)}
-				<button
-					type="button"
-					class="m3-banner__action m3-state-layer"
-					onclick={action.onClick}
-				>
-					{action.label}
-				</button>
+			{#each actions as action (action.label + (action.href ?? ""))}
+				{#if action.href}
+					<a
+						href={action.href}
+						target={action.target}
+						rel={action.rel}
+						aria-label={action.ariaLabel}
+						class="m3-banner__action m3-state-layer {action.class ?? ""}"
+					>
+						<span>{action.label}</span>
+						{#if action.icon}
+							<Icon icon={action.icon} class="m3-banner__action-icon" aria-hidden="true" />
+						{/if}
+					</a>
+				{:else}
+					<button
+						type="button"
+						aria-label={action.ariaLabel}
+						title={action.ariaLabel}
+						class="m3-banner__action m3-state-layer {action.class ?? ""}"
+						onclick={action.onClick}
+					>
+						{#if action.icon}
+							<Icon icon={action.icon} class="m3-banner__action-icon" aria-hidden="true" />
+						{/if}
+						{#if action.label}
+							<span>{action.label}</span>
+						{/if}
+					</button>
+				{/if}
 			{/each}
 		</div>
 	{/if}
@@ -116,6 +149,8 @@ let {
 		display: inline-flex
 		align-items: center
 		justify-content: center
+		gap: 0.25rem
+		min-width: 2.5rem
 		height: 2.5rem
 		padding: 0 0.75rem
 		border: none
@@ -123,7 +158,12 @@ let {
 		background: transparent
 		color: var(--primary)
 		font: var(--m3e-type-label-large)
+		text-decoration: none
 		cursor: pointer
 		white-space: nowrap
 		--m3e-state-color: var(--primary)
+
+	&__action-icon
+		width: 1.125rem
+		height: 1.125rem
 </style>

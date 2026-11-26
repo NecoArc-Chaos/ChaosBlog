@@ -7,6 +7,7 @@ import Footer from "@components/organisms/Footer.astro";
 import RouteProgress from "@components/organisms/RouteProgress.svelte";
 import SideBar from "@components/organisms/SideBar.astro";
 import SiteNavigationDrawer from "@components/organisms/SiteNavigationDrawer.svelte";
+import SiteNavigationRail from "@components/organisms/SiteNavigationRail.svelte";
 import TopAppBar from "@components/organisms/TopAppBar.astro";
 import {
 	generateGridClasses,
@@ -98,7 +99,7 @@ const hasTocWidget =
 <BannerStage page={page} title={title} description={description} date={bannerDate} />
 
 <!-- Main content -->
-<div id="main-layout" class="absolute w-full z-30 pointer-events-none">
+<div id="main-layout" class="absolute w-full z-30 pointer-events-none sm:pl-20 lg:pl-0">
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
 		<div id="main-grid" class:list={["transition duration-[var(--m3e-duration-long)] w-full left-0 right-0 grid grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4", gridClasses]}>
@@ -146,6 +147,7 @@ const hasTocWidget =
     </div>
 </div>
 
+<SiteNavigationRail client:load />
 <SiteNavigationDrawer client:load />
 {contextMenuConfig.enable && (
 	<ContextMenu

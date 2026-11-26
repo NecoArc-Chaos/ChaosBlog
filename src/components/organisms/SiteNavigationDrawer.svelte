@@ -10,6 +10,7 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { resolveNavBarLinks, resolvePageKey } from "@utils/nav-utils";
+import { lockPageScroll, type ScrollLockRelease } from "@utils/scroll-lock";
 import { url } from "@utils/url-utils";
 import { onMount, tick } from "svelte";
 import { siteConfig } from "@/config";
@@ -73,23 +74,79 @@ function toggleGroup(group: string) {
 	openGroups[group] = !openGroups[group];
 }
 
+let releaseScrollLock: ScrollLockRelease | null = null;
+let previousFocusEl: HTMLElement | null = null;
+
+function setBackgroundInert(inertState: boolean) {
+	for (const id of ["top-row", "banner-wrapper", "main-layout"]) {
+		const el = document.getElementById(id) as
+			| (HTMLElement & { inert: boolean })
+			| null;
+		if (el) el.inert = inertState;
+	}
+}
+
+function getFocusableElements(): HTMLElement[] {
+	if (!drawerEl) return [];
+	return Array.from(
+		drawerEl.querySelectorAll<HTMLElement>(
+			'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+		),
+	).filter((el) => el.offsetParent !== null);
+}
+
+$effect(() => {
+	if (open) {
+		previousFocusEl = document.activeElement as HTMLElement | null;
+		releaseScrollLock?.();
+		releaseScrollLock = lockPageScroll();
+		setBackgroundInert(true);
+		tick().then(() => {
+			drawerEl?.querySelector<HTMLElement>("a, button")?.focus();
+		});
+	} else {
+		releaseScrollLock?.();
+		releaseScrollLock = null;
+		setBackgroundInert(false);
+		if (previousFocusEl && document.contains(previousFocusEl)) {
+			previousFocusEl.focus({ preventScroll: true });
+		}
+		previousFocusEl = null;
+	}
+});
+
 onMount(() => {
 	syncFromRoute();
 	const onToggle = () => {
 		open = !open;
-		if (open) {
-			tick().then(() => {
-				drawerEl?.querySelector<HTMLElement>("a, button")?.focus();
-			});
-		}
 	};
 	const onKey = (e: KeyboardEvent) => {
-		if (e.key === "Escape") open = false;
+		if (!open) return;
+		if (e.key === "Escape") {
+			e.preventDefault();
+			open = false;
+			return;
+		}
+		if (e.key === "Tab") {
+			const focusables = getFocusableElements();
+			if (focusables.length === 0) return;
+			const first = focusables[0];
+			const last = focusables[focusables.length - 1];
+			if (e.shiftKey && document.activeElement === first) {
+				e.preventDefault();
+				last.focus();
+			} else if (!e.shiftKey && document.activeElement === last) {
+				e.preventDefault();
+				first.focus();
+			}
+		}
 	};
 	document.addEventListener("site-drawer:toggle", onToggle);
 	document.addEventListener("swup:content:replace", syncFromRoute);
 	window.addEventListener("keydown", onKey);
 	return () => {
+		releaseScrollLock?.();
+		setBackgroundInert(false);
 		document.removeEventListener("site-drawer:toggle", onToggle);
 		document.removeEventListener("swup:content:replace", syncFromRoute);
 		window.removeEventListener("keydown", onKey);
@@ -102,6 +159,7 @@ let drawerEl: HTMLElement | undefined = $state();
 <div
 	class="site-drawer"
 	class:site-drawer--open={open}
+	inert={!open}
 >
 	<div class="site-drawer__scrim" aria-hidden="true" onclick={() => (open = false)}></div>
 	<aside
@@ -170,7 +228,7 @@ let drawerEl: HTMLElement | undefined = $state();
 	&--open &__scrim
 		opacity: 1
 
-	/* 面板：360dp 宽、surface-container-low、右侧 16dp 大圆角，左侧滑入带回弹 */
+	/* 面板：360dp 宽、surface-container-low、右侧 28dp 同心大圆角，左侧滑入带真实物理弹簧回弹 */
 	&__panel
 		position: absolute
 		top: 0
@@ -183,7 +241,7 @@ let drawerEl: HTMLElement | undefined = $state();
 		box-sizing: border-box
 		background: var(--surface-container-low)
 		color: var(--on-surface)
-		border-radius: 0 var(--shape-corner-l) var(--shape-corner-l) 0
+		border-radius: 0 var(--shape-corner-xl) var(--shape-corner-xl) 0
 		transform: translateX(-100%)
 		transition: transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-accelerate)
 
@@ -200,7 +258,7 @@ let drawerEl: HTMLElement | undefined = $state();
 
 	&--open &__panel
 		transform: translateX(0)
-		transition: transform 480ms var(--m3e-easing-drawer-spring, cubic-bezier(0.22, 1.25, 0.36, 1))
+		transition: transform var(--m3e-duration-spring-slow, 560ms) var(--m3e-easing-spring-slow, cubic-bezier(0.22, 1.25, 0.36, 1))
 
 	&__brand
 		padding: var(--m3e-space-5) var(--shape-corner-xl) var(--m3e-space-3)

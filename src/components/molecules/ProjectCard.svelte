@@ -156,26 +156,24 @@ const showCover = $derived(Boolean(project.cover) && !coverFailed);
 	box-sizing: border-box
 	min-width: 0
 	overflow: hidden
-	background: var(--card-bg)
-	border: 1px solid var(--outline-variant)
+	background: var(--nested-card-bg, var(--card-bg))
+	box-shadow: var(--m3e-elevation-1)
 	border-radius: var(--shape-corner-l)
 	transition:
-		border-color var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		background-color var(--m3e-duration-medium) var(--m3e-easing-standard)
 
 	&:hover
-		border-color: var(--outline)
 		box-shadow: var(--m3e-elevation-2)
 		transform: translateY(-2px)
 		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
 
-	/* 代表项目特色高亮：边框微光 */
+	/* 代表项目特色高亮：色调内阴影 */
 	&--featured
-		border-color: unquote("color-mix(in oklab, var(--primary) 38%, var(--outline-variant))")
+		box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 32%, transparent)"), var(--m3e-elevation-1)
 		&:hover
-			border-color: var(--primary)
+			box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 55%, transparent)"), var(--m3e-elevation-2)
 
 	/* 封面：16/9 稳定比例锁高，图片永远按 cover 裁切，杜绝纵向拉伸 */
 	&__cover
@@ -235,7 +233,7 @@ const showCover = $derived(Boolean(project.cover) && !coverFailed);
 		> :global(svg)
 			width: 0.875rem
 			height: 0.875rem
-			color: #facc15
+			color: unquote("color-mix(in oklab, var(--tertiary) 45%, #fff)")
 
 	&__body
 		display: flex
@@ -434,6 +432,10 @@ const showCover = $derived(Boolean(project.cover) && !coverFailed);
 				background: unquote("color-mix(in oklab, var(--primary) 16%, transparent)")
 				box-shadow: var(--m3e-elevation-1)
 				transform: translateY(-1px)
+
+			&:focus-visible
+				outline: 2px solid var(--primary)
+				outline-offset: 2px
 
 			> :global(svg)
 				width: 1rem

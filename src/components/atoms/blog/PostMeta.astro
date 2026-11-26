@@ -126,6 +126,7 @@ const {
 		font: var(--m3e-type-body-medium)
 		font-weight: 500
 		white-space: nowrap
+		font-variant-numeric: tabular-nums
 
 	&__link
 		font: var(--m3e-type-body-medium)
@@ -144,6 +145,6 @@ const {
 
 	&__sep
 		margin: 0 0.375rem
-		color: var(--outline-variant)
+		color: unquote("color-mix(in oklab, var(--on-surface-variant) 42%, transparent)")
 		font-size: 0.875rem
 </style>

@@ -62,16 +62,16 @@ const fallback = $derived((skill.name.charAt(0) || "?").toUpperCase());
 	gap: var(--m3e-space-3)
 	min-width: 0
 	padding: var(--m3e-space-4)
-	background: var(--card-bg)
-	border: 1px solid var(--outline-variant)
+	background: var(--nested-card-bg, var(--card-bg))
+	box-shadow: var(--m3e-elevation-1)
 	border-radius: var(--shape-corner-l)
 	transition:
-		border-color var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
-		box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate)
+		box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
+		background-color var(--m3e-duration-medium) var(--m3e-easing-standard)
 
 	&:hover
-		border-color: var(--outline)
-		box-shadow: var(--m3e-elevation-1)
+		box-shadow: var(--m3e-elevation-2)
+		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
 
 	&__header
 		display: flex

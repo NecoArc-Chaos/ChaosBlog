@@ -125,7 +125,7 @@ const radiusVar = (r: string) => RADIUS_TOKENS[r] ?? r;
 	justify-content: center
 	box-sizing: border-box
 	gap: 0.5rem /* icon 与 label 间距 8px */
-	height: 2.5rem /* small 40px */
+	height: calc(2.5rem + var(--m3e-density, 0) * 4px) /* small 40px / 桌面紧凑 36px */
 	padding: 0 1.5rem /* small 水平 24px */
 	border: none
 	border-radius: var(--m3-button-radius, var(--shape-corner-m)) /* 站点形状契约 12px，radius prop 可覆盖 */
@@ -145,7 +145,21 @@ const radiusVar = (r: string) => RADIUS_TOKENS[r] ?? r;
 		box-shadow var(--m3e-duration-short) var(--m3e-easing-standard),
 		background-color var(--m3e-duration-short) var(--m3e-easing-standard),
 		color var(--m3e-duration-short) var(--m3e-easing-standard),
-		border-color var(--m3e-duration-short) var(--m3e-easing-standard)
+		border-color var(--m3e-duration-short) var(--m3e-easing-standard),
+		border-radius var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1)),
+		transform var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1))
+
+	/* MD3E Shape Morphing：按压态圆角弹性收敛 */
+	&:active:not(.m3-button--disabled)
+		border-radius: var(--shape-corner-s)
+		transform: scale(0.98)
+
+	@media (pointer: coarse)
+		&::after
+			content: ""
+			position: absolute
+			inset-block: -4px
+			inset-inline: 0
 
 	&__icon
 		display: inline-flex
@@ -180,9 +194,9 @@ const radiusVar = (r: string) => RADIUS_TOKENS[r] ?? r;
 	&--disabled
 		pointer-events: none
 
-	/* === 尺寸（latest md-comp-button-*） === */
+	/* === 尺寸（latest md-comp-button-* + --m3e-density 密度响应） === */
 	&--xsmall
-		height: 2rem /* 32px */
+		height: calc(2rem + var(--m3e-density, 0) * 4px) /* 32px / 桌面 28px */
 		padding: 0 1rem
 
 		.m3-button__icon > :global(svg)
@@ -190,7 +204,7 @@ const radiusVar = (r: string) => RADIUS_TOKENS[r] ?? r;
 			height: 1.25rem
 
 	&--small
-		height: 2.5rem /* 40px */
+		height: calc(2.5rem + var(--m3e-density, 0) * 4px) /* 40px / 桌面 36px */
 		padding: 0 1.5rem
 
 		.m3-button__icon > :global(svg)
@@ -198,7 +212,7 @@ const radiusVar = (r: string) => RADIUS_TOKENS[r] ?? r;
 			height: 1.25rem
 
 	&--medium
-		height: 3.5rem /* 56px */
+		height: calc(3.5rem + var(--m3e-density, 0) * 4px) /* 56px / 桌面 52px */
 		padding: 0 2rem
 
 		.m3-button__icon > :global(svg)

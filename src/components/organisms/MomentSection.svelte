@@ -8,8 +8,7 @@ import Button from "@components/atoms/action/Button.svelte";
 import Chips from "@components/atoms/action/Chips.svelte";
 import Card from "@components/atoms/display/Card.svelte";
 import Icon from "@components/atoms/display/Icon.svelte";
-import LoadingIndicator from "@components/atoms/feedback/LoadingIndicator.svelte";
-import TextField from "@components/atoms/input/TextField.svelte";
+import CollectionSearchField from "@components/molecules/CollectionSearchField.svelte";
 import MomentCard, {
 	type MomentAuthor,
 } from "@components/molecules/MomentCard.svelte";
@@ -39,10 +38,6 @@ let query = $state("");
 let selectedTag = $state("");
 let shownCount = $state(MOMENTS_PAGE_SIZE);
 let initialized = false;
-/** 分类（标签）筛选过渡三段态：loading 展示指示器 → out 指示器淡出 → idle 列表 stagger 揭幕 */
-type FilterPhase = "idle" | "loading" | "out";
-let phase = $state<FilterPhase>("idle");
-let phaseTimers: ReturnType<typeof setTimeout>[] = [];
 
 const tagItems = $derived(
 	Array.from(new Set(moments.flatMap((moment) => moment.filterTags)))
@@ -80,16 +75,6 @@ function countLabel(count: number) {
 	return `${count} ${i18n(I18nKey.momentsCounts)}`;
 }
 
-/** 分类（标签）筛选：指示器展示 → 淡出 → 列表 stagger 揭幕 */
-function onTagChange() {
-	phaseTimers.forEach(clearTimeout);
-	phase = "loading";
-	phaseTimers = [
-		setTimeout(() => (phase = "out"), 300),
-		setTimeout(() => (phase = "idle"), 300 + 150),
-	];
-}
-
 // 筛选变化时重置已加载数（读依赖注册在前，避免首次 return 后失联）
 $effect(() => {
 	const q = query;
@@ -123,7 +108,6 @@ onMount(() => {
 	initialized = true;
 	// 图片灯箱：client:only 岛挂载晚于全局 init，此处确保 [data-fancybox] 已绑定
 	initFancybox();
-	return () => phaseTimers.forEach(clearTimeout);
 });
 </script>
 
@@ -137,27 +121,11 @@ onMount(() => {
 	{#if moments.length > 0}
 		<div class="moment-section__tools">
 			<div class="moment-section__search">
-				<TextField
-					type="search"
+				<CollectionSearchField
 					bind:value={query}
 					placeholder={i18n(I18nKey.search)}
 					label={i18n(I18nKey.search)}
-					hideLabel
-					variant="outlined"
-					class="!rounded-(--shape-corner-l)"
-				>
-					<Icon slot="leading" icon="material-symbols:search-rounded" aria-hidden="true" />
-				</TextField>
-				{#if query}
-					<button
-						type="button"
-						class="moment-section__search-clear"
-						aria-label={i18n(I18nKey.clear)}
-						onclick={() => (query = "")}
-					>
-						<Icon icon="material-symbols:close-rounded" aria-hidden="true" />
-					</button>
-				{/if}
+				/>
 			</div>
 
 			{#if tagItems.length > 0}
@@ -166,7 +134,6 @@ onMount(() => {
 						items={tagItems}
 						variant="filter"
 						bind:value={selectedTag}
-						onchange={onTagChange}
 					/>
 				</div>
 			{/if}
@@ -176,15 +143,7 @@ onMount(() => {
 		</div>
 	{/if}
 
-	{#if phase !== "idle"}
-		<!-- 分类（标签）筛选过渡：contained 指示器展示后淡出，再由列表 stagger 揭幕 -->
-		<div
-			class="moment-section__loading"
-			class:moment-section__loading--out={phase === "out"}
-		>
-			<LoadingIndicator contained size={64} />
-		</div>
-	{:else if visibleMoments.length > 0}
+	{#if visibleMoments.length > 0}
 		{#key `${query}|${selectedTag}`}
 			<div class="moment-section__list">
 				{#each visibleMoments as moment, i (moment.id)}
@@ -228,35 +187,11 @@ onMount(() => {
 		border-bottom: 1px solid var(--outline-variant)
 
 	&__search
-		position: relative
 		width: 100%
 		max-width: 32rem
 
 		:global(.m3-text-field)
 			width: 100%
-
-	&__search-clear
-		position: absolute
-		right: 0.5rem
-		top: 50%
-		transform: translateY(-50%)
-		display: inline-flex
-		flex-shrink: 0
-		align-items: center
-		justify-content: center
-		width: 1.75rem
-		height: 1.75rem
-		padding: 0.25rem
-		border: none
-		background: none
-		color: var(--on-surface-variant)
-		cursor: pointer
-		border-radius: var(--shape-corner-full)
-		> :global(svg)
-			width: 1.25rem
-			height: 1.25rem
-		&:hover
-			background: unquote("color-mix(in oklab, var(--on-surface-variant) 8%, transparent)")
 
 	&__chips
 		width: 100%
@@ -272,17 +207,6 @@ onMount(() => {
 		grid-template-columns: minmax(0, 1fr)
 		gap: 1rem
 		padding-top: 1.5rem
-
-	/* 分类筛选过渡：区块位置的大号 contained LoadingIndicator（out = 淡出退场） */
-	&__loading
-		display: flex
-		align-items: center
-		justify-content: center
-		min-height: 11rem
-		padding-top: 1.5rem
-
-		&--out
-			animation: moment-loading-out var(--m3e-duration-short) var(--m3e-easing-emphasized-accelerate) both
 
 	&__more
 		display: flex
@@ -308,13 +232,4 @@ onMount(() => {
 
 		&__list
 			padding-top: 1.25rem
-
-/* 指示器退场：淡出 + 轻微收拢（reduced-motion 由全局规则压至终态） */
-@keyframes moment-loading-out
-	from
-		opacity: 1
-		transform: none
-	to
-		opacity: 0
-		transform: scale(0.96)
 </style>

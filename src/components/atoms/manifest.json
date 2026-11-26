@@ -452,10 +452,10 @@
 			"name": "NavigationRail",
 			"file": "navigation/NavigationRail.svelte",
 			"category": "navigation",
-			"tier": "C",
+			"tier": "A",
 			"source": "移植",
-			"landed": false,
-			"note": "无博客落地场景"
+			"landed": true,
+			"note": "Medium 窗口尺寸（640px-1023px）侧边快速导航导轨（SiteNavigationRail）已落地"
 		},
 		{
 			"name": "Tabs",
@@ -480,10 +480,10 @@
 			"name": "Banner",
 			"file": "overlay/Banner.svelte",
 			"category": "overlay",
-			"tier": "B",
+			"tier": "A",
 			"source": "移植",
-			"landed": false,
-			"note": "公告 widget，P2"
+			"landed": true,
+			"note": "公告侧栏 widget（Announcement.astro）已复用落地"
 		},
 		{
 			"name": "BottomSheet",

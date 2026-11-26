@@ -58,9 +58,9 @@ let {
 	&__title
 		margin: 0
 		color: var(--on-surface)
-		font: var(--m3e-type-headline-medium)
-		font-weight: 700
-		line-height: 1.2
+		font: var(--m3e-type-headline-medium-emphasized)
+		letter-spacing: -0.015em
+		line-height: 1.25
 
 	&__subtitle
 		margin: 0.375rem 0 0

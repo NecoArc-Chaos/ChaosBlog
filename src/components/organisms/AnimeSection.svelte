@@ -10,8 +10,8 @@
 import Chips from "@components/atoms/action/Chips.svelte";
 import Card from "@components/atoms/display/Card.svelte";
 import Icon from "@components/atoms/display/Icon.svelte";
-import TextField from "@components/atoms/input/TextField.svelte";
 import AnimeCard from "@components/molecules/AnimeCard.svelte";
+import CollectionSearchField from "@components/molecules/CollectionSearchField.svelte";
 import ListPagination from "@components/molecules/ListPagination.svelte";
 import PageHeader from "@components/molecules/PageHeader.svelte";
 import I18nKey from "@i18n/i18nKey";
@@ -171,27 +171,12 @@ onMount(() => {
 		<div class="anime-section__tools" bind:this={toolsEl} tabindex="-1">
 			<div class="anime-section__search-row">
 				<div class="anime-section__search">
-					<TextField
-						type="search"
+					<CollectionSearchField
 						bind:value={() => query, setQuery}
 						placeholder={i18n(I18nKey.search)}
 						label={i18n(I18nKey.search)}
-						hideLabel
-						variant="outlined"
-						class="!rounded-(--shape-corner-l)"
-					>
-						<Icon slot="leading" icon="material-symbols:search-rounded" aria-hidden="true" />
-					</TextField>
-					{#if query}
-						<button
-							type="button"
-							class="anime-section__search-clear"
-							aria-label={i18n(I18nKey.clear)}
-							onclick={() => setQuery("")}
-						>
-							<Icon icon="material-symbols:close-rounded" aria-hidden="true" />
-						</button>
-					{/if}
+						onclear={() => setQuery("")}
+					/>
 				</div>
 
 				<div class="anime-section__layout-switch" role="group" aria-label={i18n(I18nKey.layoutMode)}>
@@ -291,7 +276,7 @@ onMount(() => {
 		display: flex
 		flex-direction: column
 		gap: 0.875rem
-		padding-bottom: 1.25rem
+		padding-bottom: 1.5rem
 		border-bottom: 1px solid var(--outline-variant)
 
 	&__search-row
@@ -301,36 +286,12 @@ onMount(() => {
 		width: 100%
 
 	&__search
-		position: relative
 		flex: 1
 		min-width: 0
 		max-width: 32rem
 
 		:global(.m3-text-field)
 			width: 100%
-
-	&__search-clear
-		position: absolute
-		right: 0.5rem
-		top: 50%
-		transform: translateY(-50%)
-		display: inline-flex
-		flex-shrink: 0
-		align-items: center
-		justify-content: center
-		width: 1.75rem
-		height: 1.75rem
-		padding: 0.25rem
-		border: none
-		background: none
-		color: var(--on-surface-variant)
-		cursor: pointer
-		border-radius: var(--shape-corner-full)
-		> :global(svg)
-			width: 1.25rem
-			height: 1.25rem
-		&:hover
-			background: unquote("color-mix(in oklab, var(--on-surface-variant) 8%, transparent)")
 
 	&__filter-row
 		display: flex

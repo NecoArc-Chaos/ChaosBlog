@@ -110,7 +110,7 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 		<div class="device-card__footer">
 			{#if device.link}
 				<a
-					class="device-card__link"
+					class="device-card__link m3-state-layer"
 					href={device.link}
 					target="_blank"
 					rel="noopener noreferrer"
@@ -136,26 +136,24 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 	display: flex
 	flex-direction: column
 	overflow: hidden
-	background: var(--card-bg)
-	border: 1px solid var(--outline-variant)
+	background: var(--nested-card-bg, var(--card-bg))
+	box-shadow: var(--m3e-elevation-1)
 	border-radius: var(--shape-corner-l)
 	transition:
-		border-color var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
 		background-color var(--m3e-duration-medium) var(--m3e-easing-standard)
 
 	&:hover
-		border-color: var(--outline)
 		box-shadow: var(--m3e-elevation-2)
 		transform: translateY(-2px)
 		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
 
-	/* 主力推荐特色高亮：边框微光 */
+	/* 主力推荐特色高亮：纯色调微光描影（不混用 Outlined 硬边框） */
 	&--featured
-		border-color: unquote("color-mix(in oklab, var(--primary) 38%, var(--outline-variant))")
+		box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 32%, transparent)"), var(--m3e-elevation-1)
 		&:hover
-			border-color: var(--primary)
+			box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 55%, transparent)"), var(--m3e-elevation-2)
 
 	/* 媒体区：设备图 object-contain，浅色调渐变背景衬底，任何宽度不拉伸 */
 	&__media
@@ -326,14 +324,15 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 		display: inline-flex
 		align-items: center
 		gap: 0.3125rem
-		padding: 0.25rem 0.625rem
+		min-height: 2.25rem
+		padding: 0.3125rem 0.75rem
 		border-radius: var(--shape-corner-m)
-		background: unquote("color-mix(in oklab, var(--primary) 8%, transparent)")
+		background: unquote("color-mix(in oklab, var(--primary) 10%, transparent)")
 		color: var(--primary)
+		--m3e-state-color: var(--primary)
 		font: var(--m3e-type-label-medium)
 		font-weight: 600
 		text-decoration: none
-		border: 1px solid unquote("color-mix(in oklab, var(--primary) 16%, transparent)")
 		transition:
 			background-color var(--m3e-duration-short) var(--m3e-easing-standard),
 			box-shadow var(--m3e-duration-short) var(--m3e-easing-standard),
@@ -343,6 +342,10 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 			background: unquote("color-mix(in oklab, var(--primary) 16%, transparent)")
 			box-shadow: var(--m3e-elevation-1)
 			transform: translateY(-1px)
+
+		&:focus-visible
+			outline: 2px solid var(--primary)
+			outline-offset: 2px
 
 		> :global(svg)
 			width: 1rem
@@ -359,5 +362,5 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 		> :global(svg)
 			width: 0.875rem
 			height: 0.875rem
-			color: #facc15
+			color: var(--tertiary)
 </style>
