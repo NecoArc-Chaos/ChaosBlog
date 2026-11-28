@@ -41,7 +41,7 @@ function isActive(link: (typeof links)[number]): boolean {
 	]}
 >
 	<div class="relative max-w-[var(--page-width)] mx-auto h-16 px-3 md:px-5 flex items-center gap-1">
-		<IconButton id="nav-drawer-switch" label={i18n(I18nKey.menu)} class="shrink-0 sm:!hidden">
+		<IconButton id="nav-drawer-switch" label={i18n(I18nKey.menu)} ariaExpanded={false} ariaControls="site-nav-rail" class="shrink-0 sm:!hidden">
 			<Icon icon="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
 		</IconButton>
 		<a
@@ -163,6 +163,10 @@ function isActive(link: (typeof links)[number]): boolean {
 		});
 		if (!document.documentElement.dataset.topAppBarNavBound) {
 			document.documentElement.dataset.topAppBarNavBound = "true";
+			document.addEventListener("site-drawer:state", (event) => {
+				const open = Boolean((event as CustomEvent<{ open?: boolean }>).detail?.open);
+				document.getElementById("nav-drawer-switch")?.setAttribute("aria-expanded", String(open));
+			});
 			document.addEventListener("swup:content:replace", syncTopAppBarNavigation);
 			document.addEventListener("swup:page:view", syncTopAppBarNavigation);
 			document.addEventListener("click", (event) => {

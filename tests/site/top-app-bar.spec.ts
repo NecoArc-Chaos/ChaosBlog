@@ -69,23 +69,34 @@ test.describe("navigation feature gating", () => {
 		}
 	});
 
-	test("keeps the mobile drawer free of dead feature links", async ({
+	test("keeps the mobile navigation rail free of dead feature links", async ({
 		page,
 	}) => {
-		// 抽屉只在窄屏出现（`lg:!hidden`），分组子项展开后才进入 DOM。
+		// 移动端（<640px）点击顶栏菜单按钮，在原地长出悬浮可展开导航导轨。
 		await page.setViewportSize({ width: 390, height: 844 });
 		await page.goto("/", { waitUntil: "domcontentloaded" });
 		await page.locator("#nav-drawer-switch").click();
 
-		const groupHeads = page.locator(".site-drawer__group-head");
+		const groupHeads = page.locator('#site-nav-rail button[aria-expanded="false"]');
 		for (let index = 0; index < (await groupHeads.count()); index += 1) {
 			await groupHeads.nth(index).click();
 		}
 
-		for (const [feature, enabled, href] of featureRoutes) {
+		for (const [feature, enabled, name] of [
+			["friends", friendsConfig.enable, "Friends"],
+			["moments", momentsConfig.enable, "Moments"],
+			["anime", animeConfig.enable, "Anime"],
+			["compass", compassConfig.enable, "Compass"],
+			["albums", albumsConfig.enable, "Albums"],
+			["timeline", timelineConfig.enable, "Timeline"],
+			["projects", projectsConfig.enable, "Projects"],
+			["devices", devicesConfig.enable, "Devices"],
+			["skills", skillsConfig.enable, "Skills"],
+			["about", aboutConfig.enable, "About"],
+		] as Array<[string, boolean, string]>) {
 			await expect(
-				page.locator(`.site-drawer a[href="${href}"]`),
-				`drawer entry for ${feature}`,
+				page.locator(`#site-nav-rail button[aria-label="${name}"]`),
+				`rail entry for ${feature}`,
 			).toHaveCount(enabled ? 1 : 0);
 		}
 	});

@@ -1,21 +1,24 @@
 <script lang="ts">
 /**
- * 中等屏幕（640px–1023px，Medium Window Size Class）左侧同体变形导航导轨。
+ * 移动端与中等屏幕（<1024px）同体变形悬浮导航导轨。
  * 复用 atoms/navigation/NavigationRail 原子（expandable 模式）：
- *   - 平时为 28px 大圆角悬浮毛玻璃胶囊条，不再用生硬直角切割 Banner；
- *   - 点击顶部展开按钮或「更多」分组时，同一容器平滑扩张至 248px，
- *     图标原地延续、胶囊延展为整行 pill、二级菜单原地展开，不再另弹重复大抽屉。
+ *   - 平板 / 窄桌面（640px–1023px）：常驻 76px 宽 28px 大圆角悬浮毛玻璃 Dock，
+ *     点击顶部按钮或「更多」原地平滑扩宽至 248px；
+ *   - 手机小屏（<640px）：收起态零宽度占用（正文 100% 全宽阅读），点击顶栏左上角
+ *     #nav-drawer-switch 按钮时，直接从左上角原地展开长成 248px 悬浮毛玻璃左栏，
+ *     并支持背景滚动锁定、Esc 与点击外部遮罩收起。
  */
+import Avatar from "@components/atoms/display/Avatar.svelte";
 import NavigationRail, {
 	type NavigationRailItem,
 } from "@components/atoms/navigation/NavigationRail.svelte";
-import Avatar from "@components/atoms/display/Avatar.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { resolveNavBarLinks, resolvePageKey } from "@utils/nav-utils";
+import { lockPageScroll, type ScrollLockRelease } from "@utils/scroll-lock";
 import { url } from "@utils/url-utils";
-import { onMount } from "svelte";
+import { onMount, tick } from "svelte";
 import { siteConfig } from "@/config";
 import { navBarConfig } from "@/config/navBarConfig";
 
@@ -64,6 +67,13 @@ const railItems: NavigationRailItem[] = links.map((link) => {
 
 let activeValue = $state("");
 let expanded = $state(false);
+let railEl: HTMLElement | undefined = $state();
+let releaseScrollLock: ScrollLockRelease | null = null;
+let previousFocusEl: HTMLElement | null = null;
+
+function isMobileViewport(): boolean {
+	return typeof window !== "undefined" && window.innerWidth < 640;
+}
 
 function syncFromRoute() {
 	const pageKey = resolvePageKey(new URL(window.location.href));
@@ -99,17 +109,55 @@ function handleSelect(itemValue: string, isGroup: boolean) {
 	}
 }
 
+$effect(() => {
+	if (typeof document !== "undefined") {
+		document.dispatchEvent(
+			new CustomEvent("site-drawer:state", { detail: { open: expanded } }),
+		);
+	}
+	if (expanded) {
+		previousFocusEl = document.activeElement as HTMLElement | null;
+		if (isMobileViewport()) {
+			releaseScrollLock?.();
+			releaseScrollLock = lockPageScroll();
+		}
+		tick().then(() => {
+			if (isMobileViewport()) {
+				railEl?.focus({ preventScroll: true });
+			}
+		});
+	} else {
+		releaseScrollLock?.();
+		releaseScrollLock = null;
+		if (
+			isMobileViewport() &&
+			previousFocusEl &&
+			document.contains(previousFocusEl)
+		) {
+			previousFocusEl.focus({ preventScroll: true });
+		}
+		previousFocusEl = null;
+	}
+});
+
 onMount(() => {
 	syncFromRoute();
+	const onToggle = () => {
+		expanded = !expanded;
+	};
 	const onKey = (e: KeyboardEvent) => {
 		if (e.key === "Escape" && expanded) {
+			e.preventDefault();
 			expanded = false;
 		}
 	};
+	document.addEventListener("site-drawer:toggle", onToggle);
 	document.addEventListener("swup:content:replace", syncFromRoute);
 	window.addEventListener("popstate", syncFromRoute);
 	window.addEventListener("keydown", onKey);
 	return () => {
+		releaseScrollLock?.();
+		document.removeEventListener("site-drawer:toggle", onToggle);
 		document.removeEventListener("swup:content:replace", syncFromRoute);
 		window.removeEventListener("popstate", syncFromRoute);
 		window.removeEventListener("keydown", onKey);
@@ -127,9 +175,11 @@ onMount(() => {
 	{/if}
 
 	<div
+		bind:this={railEl}
 		id="site-nav-rail"
 		class="site-nav-rail"
 		class:site-nav-rail--expanded={expanded}
+		tabindex="-1"
 	>
 		<NavigationRail
 			items={railItems}
@@ -178,16 +228,16 @@ onMount(() => {
 .site-nav-rail-shell
 	display: none
 
-	@media (min-width: bp-sm) and (max-width: bp-lg - 1px)
+	@media (max-width: bp-lg - 1px)
 		display: block
 
 .site-nav-rail-scrim
 	position: fixed
 	inset: 0
 	z-index: 44
-	background: unquote("color-mix(in oklab, var(--scrim, #000) 20%, transparent)")
-	backdrop-filter: blur(2px)
-	-webkit-backdrop-filter: blur(2px)
+	background: unquote("color-mix(in oklab, var(--scrim, #000) 24%, transparent)")
+	backdrop-filter: blur(3px)
+	-webkit-backdrop-filter: blur(3px)
 	animation: rail-scrim-in 240ms var(--m3e-easing-effects-default, cubic-bezier(0.05, 0.7, 0.1, 1))
 
 .site-nav-rail
@@ -199,16 +249,43 @@ onMount(() => {
 	overflow-y: auto
 	overflow-x: hidden
 	scrollbar-width: none
+	outline: none
 	border-radius: var(--shape-corner-xl)
 	background: unquote("color-mix(in oklab, var(--surface-container-low) 90%, transparent)")
 	backdrop-filter: blur(16px)
 	-webkit-backdrop-filter: blur(16px)
 	box-shadow: var(--m3e-elevation-2)
+	transform-origin: top left
 	transition:
 		background-color 240ms var(--m3e-easing-standard),
 		box-shadow 300ms var(--m3e-easing-emphasized-decelerate)
 	&::-webkit-scrollbar
 		display: none
+
+	/* 手机端（<640px）：收起时零占宽隐藏，展开时从左上角原地缩放长成大圆角悬浮左栏 */
+	@media (max-width: bp-sm - 1px)
+		opacity: 0
+		visibility: hidden
+		pointer-events: none
+		transform: translate(-6px, -12px) scale(0.84)
+		transition:
+			opacity 180ms var(--m3e-easing-effects-fast, cubic-bezier(0.2, 0, 0, 1)),
+			transform 220ms var(--m3e-easing-emphasized-accelerate, cubic-bezier(0.3, 0, 0.8, 0.15)),
+			visibility 0s linear 220ms,
+			background-color 240ms var(--m3e-easing-standard),
+			box-shadow 240ms var(--m3e-easing-standard)
+
+		&--expanded
+			opacity: 1
+			visibility: visible
+			pointer-events: auto
+			transform: translate(0, 0) scale(1)
+			transition:
+				opacity 220ms var(--m3e-easing-effects-default, cubic-bezier(0.05, 0.7, 0.1, 1)),
+				transform var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1)),
+				visibility 0s linear 0s,
+				background-color 240ms var(--m3e-easing-standard),
+				box-shadow 300ms var(--m3e-easing-emphasized-decelerate)
 
 	&--expanded
 		background: unquote("color-mix(in oklab, var(--surface-container-low) 97%, transparent)")
