@@ -133,6 +133,7 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 @import "../../styles/breakpoints.styl"
 
 .device-card
+	position: relative
 	display: flex
 	flex-direction: column
 	overflow: hidden
@@ -147,15 +148,15 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 	&:hover
 		box-shadow: var(--m3e-elevation-2)
 		transform: translateY(-2px)
-		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
+		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--nested-card-bg, var(--card-bg)))")
 
-	/* 主力推荐特色高亮：纯色调微光描影（不混用 Outlined 硬边框） */
+	/* 主力推荐特色高亮：纯色调微升（无半截硬描边） */
 	&--featured
-		box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 32%, transparent)"), var(--m3e-elevation-1)
+		background: unquote("color-mix(in oklab, var(--primary) 5%, var(--nested-card-bg, var(--card-bg)))")
 		&:hover
-			box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 55%, transparent)"), var(--m3e-elevation-2)
+			background: unquote("color-mix(in oklab, var(--primary) 8%, var(--nested-card-bg, var(--card-bg)))")
 
-	/* 媒体区：设备图 object-contain，浅色调渐变背景衬底，任何宽度不拉伸 */
+	/* 媒体区：透明设备图 object-contain + 柔和投影，融入浅色调渐变舞台 */
 	&__media
 		display: flex
 		align-items: center
@@ -165,8 +166,8 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 		flex-shrink: 0
 		overflow: hidden
 		background: linear-gradient(160deg,
-			unquote("color-mix(in oklab, var(--primary) 12%, var(--surface-container-low))"),
-			var(--surface-container-high))
+			unquote("color-mix(in oklab, var(--primary) 10%, var(--surface-container-low))"),
+			unquote("color-mix(in oklab, var(--primary) 4%, var(--surface-container))"))
 
 		> img
 			display: block
@@ -176,6 +177,7 @@ const showImage = $derived(Boolean(device.image) && !coverFailed);
 			height: auto
 			object-fit: contain
 			padding: var(--m3e-space-3)
+			filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.2))
 			transition: transform var(--m3e-duration-long) var(--m3e-easing-emphasized-decelerate)
 
 			.device-card:hover &

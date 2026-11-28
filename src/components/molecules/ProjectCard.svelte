@@ -167,13 +167,13 @@ const showCover = $derived(Boolean(project.cover) && !coverFailed);
 	&:hover
 		box-shadow: var(--m3e-elevation-2)
 		transform: translateY(-2px)
-		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
+		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--nested-card-bg, var(--card-bg)))")
 
-	/* 代表项目特色高亮：色调内阴影 */
+	/* 代表项目特色高亮：纯色调微升 */
 	&--featured
-		box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 32%, transparent)"), var(--m3e-elevation-1)
+		background: unquote("color-mix(in oklab, var(--primary) 5%, var(--nested-card-bg, var(--card-bg)))")
 		&:hover
-			box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--primary) 55%, transparent)"), var(--m3e-elevation-2)
+			background: unquote("color-mix(in oklab, var(--primary) 8%, var(--nested-card-bg, var(--card-bg)))")
 
 	/* 封面：16/9 稳定比例锁高，图片永远按 cover 裁切，杜绝纵向拉伸 */
 	&__cover

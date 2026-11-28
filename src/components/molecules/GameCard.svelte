@@ -176,12 +176,12 @@ const ratingLabel = $derived(
 	&:hover
 		box-shadow: var(--m3e-elevation-2)
 		transform: translateY(-2px)
-		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
+		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--nested-card-bg, var(--card-bg)))")
 
 	&--featured
-		box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--tertiary) 36%, transparent)"), var(--m3e-elevation-1)
+		background: unquote("color-mix(in oklab, var(--tertiary) 5%, var(--nested-card-bg, var(--card-bg)))")
 		&:hover
-			box-shadow: inset 0 0 0 1.5px unquote("color-mix(in oklab, var(--tertiary) 62%, transparent)"), var(--m3e-elevation-2)
+			background: unquote("color-mix(in oklab, var(--tertiary) 8%, var(--nested-card-bg, var(--card-bg)))")
 
 	/* ── 横幅：16:9 横屏封面主视觉 ── */
 	&__banner
