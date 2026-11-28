@@ -84,12 +84,7 @@ let releaseScrollLock: ScrollLockRelease | null = null;
 let previousFocusEl: HTMLElement | null = null;
 
 function setBackgroundInert(inertState: boolean) {
-	for (const id of [
-		"top-row",
-		"banner-wrapper",
-		"main-layout",
-		"site-nav-rail",
-	]) {
+	for (const id of ["top-row", "banner-wrapper", "main-layout"]) {
 		const el = document.getElementById(id) as
 			| (HTMLElement & { inert: boolean })
 			| null;
@@ -107,11 +102,6 @@ function getFocusableElements(): HTMLElement[] {
 }
 
 $effect(() => {
-	if (typeof document !== "undefined") {
-		document.dispatchEvent(
-			new CustomEvent("site-drawer:state", { detail: { open } }),
-		);
-	}
 	if (open) {
 		previousFocusEl = document.activeElement as HTMLElement | null;
 		releaseScrollLock?.();
