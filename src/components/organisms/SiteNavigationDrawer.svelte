@@ -1,11 +1,17 @@
 <script lang="ts">
 /**
- * 全站导航抽屉（M3 ModalNavigationDrawer 应用，自包含实现，不改原子）。
- * 顶部栏菜单按钮派发 site-drawer:toggle 事件开合；内容：
- *   一级导航（navBarConfig）+ 可折叠「分类」分组（多级扩展点）。
- * 链接由 Swup 自动接管，点击后收起抽屉；高亮与当前路由/分类筛选同步。
+ * 全站导航抽屉（M3 ModalNavigationDrawer 应用）。
+ * 顶部栏菜单按钮或平板导航导轨派发 site-drawer:toggle 事件开合；
+ * 遵循 MD3E Spatial/Effects 分离规范：
+ *   - 面板主体采用平滑阻尼 Emphasized Decelerate/Accelerate（避免大面墙体晃动），
+ *   - 外层 visibility 延迟至退场完成后隐藏（消除瞬移闪退），
+ *   - 内部导航项轻量交错渐入 + 按压弹性微反馈，
+ *   - 焦点落至 dialog 容器自身，保留 Tab 焦点陷阱与关闭返还焦点。
  */
 
+import IconButton from "@components/atoms/action/IconButton.svelte";
+import AccentBar from "@components/atoms/display/AccentBar.svelte";
+import Avatar from "@components/atoms/display/Avatar.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
@@ -78,7 +84,12 @@ let releaseScrollLock: ScrollLockRelease | null = null;
 let previousFocusEl: HTMLElement | null = null;
 
 function setBackgroundInert(inertState: boolean) {
-	for (const id of ["top-row", "banner-wrapper", "main-layout"]) {
+	for (const id of [
+		"top-row",
+		"banner-wrapper",
+		"main-layout",
+		"site-nav-rail",
+	]) {
 		const el = document.getElementById(id) as
 			| (HTMLElement & { inert: boolean })
 			| null;
@@ -96,13 +107,18 @@ function getFocusableElements(): HTMLElement[] {
 }
 
 $effect(() => {
+	if (typeof document !== "undefined") {
+		document.dispatchEvent(
+			new CustomEvent("site-drawer:state", { detail: { open } }),
+		);
+	}
 	if (open) {
 		previousFocusEl = document.activeElement as HTMLElement | null;
 		releaseScrollLock?.();
 		releaseScrollLock = lockPageScroll();
 		setBackgroundInert(true);
 		tick().then(() => {
-			drawerEl?.querySelector<HTMLElement>("a, button")?.focus();
+			drawerEl?.focus({ preventScroll: true });
 		});
 	} else {
 		releaseScrollLock?.();
@@ -132,7 +148,11 @@ onMount(() => {
 			if (focusables.length === 0) return;
 			const first = focusables[0];
 			const last = focusables[focusables.length - 1];
-			if (e.shiftKey && document.activeElement === first) {
+			if (
+				e.shiftKey &&
+				(document.activeElement === first ||
+					document.activeElement === drawerEl)
+			) {
 				e.preventDefault();
 				last.focus();
 			} else if (!e.shiftKey && document.activeElement === last) {
@@ -168,17 +188,38 @@ let drawerEl: HTMLElement | undefined = $state();
 		role="dialog"
 		aria-modal="true"
 		aria-label={siteConfig.title}
+		tabindex="-1"
 	>
-		<div class="site-drawer__brand">
-			<div class="site-drawer__title">{siteConfig.title}</div>
-			<div class="site-drawer__subtitle">{siteConfig.subtitle}</div>
-		</div>
+		<header class="site-drawer__brand">
+			<div class="site-drawer__brand-identity">
+				<Avatar
+					src={url("/assets/images/chaos-avatar.jpg")}
+					alt=""
+					size={42}
+					shape="rounded"
+					fallback={siteConfig.title[0]}
+				/>
+				<div class="site-drawer__brand-text">
+					<div class="site-drawer__title-row">
+						<AccentBar size="small" />
+						<span class="site-drawer__title">{siteConfig.title}</span>
+					</div>
+					<div class="site-drawer__subtitle">{siteConfig.subtitle}</div>
+				</div>
+			</div>
+			<IconButton
+				icon="material-symbols:close-rounded"
+				label={i18n(I18nKey.close)}
+				size="small"
+				onclick={() => (open = false)}
+			/>
+		</header>
 
 		<nav class="site-drawer__nav" aria-label={i18n(I18nKey.navigationDrawer)}>
-			{#each primaryItems as item (item.value)}
+			{#each primaryItems as item, index (item.value)}
 				{#if item.children}
-					<div class="site-drawer__group">
-						<button type="button" class="site-drawer__group-head" class:site-drawer__item--active={item.children.some((child) => activePrimary === child.value)} onclick={() => toggleGroup(item.value)} aria-expanded={openGroups[item.value] ?? false}>
+					<div class="site-drawer__group site-drawer__stagger" style={`--drawer-idx: ${Math.min(index, 8)}`}>
+						<button type="button" class="site-drawer__group-head m3-state-layer" class:site-drawer__item--active={item.children.some((child) => activePrimary === child.value)} onclick={() => toggleGroup(item.value)} aria-expanded={openGroups[item.value] ?? false}>
 							{#if item.icon}<span class="site-drawer__group-icon" aria-hidden="true"><Icon icon={item.icon} /></span>{/if}
 							<span class="site-drawer__group-label">{item.label}</span>
 							<Icon class={openGroups[item.value] ? "site-drawer__group-arrow site-drawer__group-arrow--open" : "site-drawer__group-arrow"} icon="material-symbols:keyboard-arrow-down" />
@@ -186,7 +227,7 @@ let drawerEl: HTMLElement | undefined = $state();
 						{#if openGroups[item.value]}
 							<div class="site-drawer__group-body">
 								{#each item.children as child (child.value)}
-									<a href={child.href} class="site-drawer__item site-drawer__item--child" class:site-drawer__item--active={activePrimary === child.value} aria-current={activePrimary === child.value ? "page" : undefined} target={child.external ? "_blank" : undefined} rel={child.external ? "noopener noreferrer" : undefined} onclick={handleNavClick}>
+									<a href={child.href} class="site-drawer__item site-drawer__item--child m3-state-layer" class:site-drawer__item--active={activePrimary === child.value} aria-current={activePrimary === child.value ? "page" : undefined} target={child.external ? "_blank" : undefined} rel={child.external ? "noopener noreferrer" : undefined} onclick={handleNavClick}>
 										{#if child.icon}<span class="site-drawer__item-icon" aria-hidden="true"><Icon icon={child.icon} /></span>{/if}
 										<span class="site-drawer__item-label">{child.label}</span>
 									</a>
@@ -195,7 +236,7 @@ let drawerEl: HTMLElement | undefined = $state();
 						{/if}
 					</div>
 				{:else if item.href}
-					<a href={item.href} class="site-drawer__item" class:site-drawer__item--active={activePrimary === item.value} aria-current={activePrimary === item.value ? "page" : undefined} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined} onclick={handleNavClick}>
+					<a href={item.href} class="site-drawer__item site-drawer__stagger m3-state-layer" style={`--drawer-idx: ${Math.min(index, 8)}`} class:site-drawer__item--active={activePrimary === item.value} aria-current={activePrimary === item.value ? "page" : undefined} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined} onclick={handleNavClick}>
 						{#if item.icon}<span class="site-drawer__item-icon" aria-hidden="true"><Icon icon={item.icon} /></span>{/if}
 						<span class="site-drawer__item-label">{item.label}</span>
 					</a>
@@ -213,22 +254,29 @@ let drawerEl: HTMLElement | undefined = $state();
 	z-index: 60
 	visibility: hidden
 	pointer-events: none
+	/* 关闭时等待面板平滑退场完成（240ms）后再隐藏，消除瞬间闪退 */
+	transition: visibility 0s linear 240ms
 
 	&--open
 		visibility: visible
 		pointer-events: auto
+		transition: visibility 0s linear 0s
 
 	&__scrim
 		position: absolute
 		inset: 0
-		background: unquote("color-mix(in oklab, var(--scrim, #000) 32%, transparent)")
+		background: unquote("color-mix(in oklab, var(--scrim, #000) 34%, transparent)")
+		backdrop-filter: blur(3px)
+		-webkit-backdrop-filter: blur(3px)
 		opacity: 0
-		transition: opacity var(--m3e-duration-medium) var(--m3e-easing-standard)
+		transition: opacity 240ms var(--m3e-easing-effects-default, cubic-bezier(0.05, 0.7, 0.1, 1))
 
 	&--open &__scrim
 		opacity: 1
+		transition: opacity 320ms var(--m3e-easing-effects-default, cubic-bezier(0.05, 0.7, 0.1, 1))
 
-	/* 面板：360dp 宽、surface-container-low、右侧 28dp 同心大圆角，左侧滑入带真实物理弹簧回弹 */
+	/* 面板：360dp 宽、surface-container-low、右侧 28dp 同心大圆角
+	   采用 MD3E Emphasized Decelerate/Accelerate 平滑阻尼滑入滑出，保持大面积浮层稳重丝滑 */
 	&__panel
 		position: absolute
 		top: 0
@@ -242,61 +290,106 @@ let drawerEl: HTMLElement | undefined = $state();
 		background: var(--surface-container-low)
 		color: var(--on-surface)
 		border-radius: 0 var(--shape-corner-xl) var(--shape-corner-xl) 0
+		box-shadow: none
+		outline: none
 		transform: translateX(-100%)
-		transition: transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-accelerate)
-
-		/* 左侧延伸裙边：防止弹簧回弹过冲（translateX > 0）时左侧脱离屏幕边缘产生漏缝 */
-		&::before
-			content: ""
-			position: absolute
-			top: 0
-			bottom: 0
-			right: 100%
-			width: 120px
-			background: inherit
-			pointer-events: none
+		will-change: transform
+		transition:
+			transform 240ms var(--m3e-easing-emphasized-accelerate, cubic-bezier(0.3, 0, 0.8, 0.15)),
+			box-shadow 240ms var(--m3e-easing-standard)
 
 	&--open &__panel
 		transform: translateX(0)
-		transition: transform var(--m3e-duration-spring-slow, 560ms) var(--m3e-easing-spring-slow, cubic-bezier(0.22, 1.25, 0.36, 1))
+		box-shadow: var(--m3e-elevation-3)
+		transition:
+			transform 380ms var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)),
+			box-shadow 380ms var(--m3e-easing-standard)
 
 	&__brand
-		padding: var(--m3e-space-5) var(--shape-corner-xl) var(--m3e-space-3)
+		display: flex
+		align-items: center
+		justify-content: space-between
+		gap: var(--m3e-space-3)
+		padding: var(--m3e-space-5) var(--m3e-space-4) var(--m3e-space-3) var(--m3e-space-5)
 		flex: none
 
+	&__brand-identity
+		display: flex
+		align-items: center
+		gap: var(--m3e-space-3)
+		min-width: 0
+
+	&__brand-text
+		display: flex
+		flex-direction: column
+		min-width: 0
+
+	&__title-row
+		display: flex
+		align-items: center
+		gap: var(--m3e-space-2)
+		min-width: 0
+
 	&__title
-		font: var(--m3e-type-title-large)
+		font: var(--m3e-type-title-medium)
+		font-weight: 600
 		color: var(--on-surface)
+		white-space: nowrap
+		overflow: hidden
+		text-overflow: ellipsis
 
 	&__subtitle
-		margin-top: var(--m3e-space-1)
-		font: var(--m3e-type-body-medium)
+		margin-top: 0.125rem
+		font: var(--m3e-type-body-small)
 		color: var(--on-surface-variant)
+		white-space: nowrap
+		overflow: hidden
+		text-overflow: ellipsis
 
 	&__nav
 		flex: 1
 		overflow-y: auto
-		padding: var(--m3e-space-2) var(--m3e-space-3) var(--m3e-space-4)
+		padding: var(--m3e-space-2) var(--m3e-space-3) var(--m3e-space-5)
+		scrollbar-width: thin
 
-	/* 一级/子项：全宽 56dp，选中整项 secondary-container 全圆 pill */
+	/* 内部菜单项轻量交错渐入（关闭时不设延迟，利落退场） */
+	&__stagger
+		opacity: 0
+		transform: translateX(-10px)
+		transition:
+			opacity 140ms var(--m3e-easing-effects-fast, cubic-bezier(0.2, 0, 0, 1)),
+			transform 160ms var(--m3e-easing-emphasized-accelerate, cubic-bezier(0.3, 0, 0.8, 0.15))
+		transition-delay: 0ms
+
+	&--open &__stagger
+		opacity: 1
+		transform: translateX(0)
+		transition:
+			opacity 240ms var(--m3e-easing-effects-default, cubic-bezier(0.05, 0.7, 0.1, 1)),
+			transform 320ms var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1))
+		transition-delay: calc(50ms + var(--drawer-idx, 0) * 24ms)
+
+	/* 一级/子项：全宽 56dp（子项 48dp），选中整项 secondary-container 全圆 pill */
 	&__item
 		display: flex
 		align-items: center
 		gap: var(--m3e-space-3)
 		width: 100%
-		min-height: 56px
+		min-height: 52px
 		box-sizing: border-box
 		padding: 0 var(--m3e-space-4)
 		border-radius: var(--shape-corner-full)
 		color: var(--on-surface-variant)
 		text-decoration: none
 		cursor: pointer
+		--m3e-state-color: var(--on-surface)
 		transition:
 			background-color var(--m3e-duration-short) var(--m3e-easing-standard),
-			color var(--m3e-duration-short) var(--m3e-easing-standard)
+			color var(--m3e-duration-short) var(--m3e-easing-standard),
+			transform var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1))
 
-		&:hover
-			background: unquote("color-mix(in oklab, var(--on-surface) 8%, transparent)")
+		&:active
+			transform: scale(0.985)
 
 		&:focus-visible
 			outline: 2px solid var(--secondary)
@@ -305,11 +398,10 @@ let drawerEl: HTMLElement | undefined = $state();
 		&--active
 			background: var(--secondary-container)
 			color: var(--on-secondary-container)
-			&:hover
-				background: var(--secondary-container)
+			--m3e-state-color: var(--on-secondary-container)
 
 		&--child
-			min-height: 48px
+			min-height: 46px
 			padding-left: var(--m3e-space-8)
 
 	&__item-icon
@@ -336,14 +428,14 @@ let drawerEl: HTMLElement | undefined = $state();
 
 	/* 分组头部 */
 	&__group
-		margin-top: 4px
+		margin-top: 2px
 
 	&__group-head
 		display: flex
 		align-items: center
 		gap: 12px
 		width: 100%
-		min-height: 56px
+		min-height: 52px
 		box-sizing: border-box
 		padding: 0 16px
 		border: none
@@ -351,9 +443,12 @@ let drawerEl: HTMLElement | undefined = $state();
 		background: none
 		color: var(--on-surface-variant)
 		cursor: pointer
-		transition: background-color var(--m3e-duration-short) var(--m3e-easing-standard)
-		&:hover
-			background: unquote("color-mix(in oklab, var(--on-surface) 8%, transparent)")
+		--m3e-state-color: var(--on-surface)
+		transition:
+			background-color var(--m3e-duration-short) var(--m3e-easing-standard),
+			transform var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1))
+		&:active
+			transform: scale(0.985)
 		&:focus-visible
 			outline: 2px solid var(--secondary)
 			outline-offset: -2px
@@ -374,7 +469,7 @@ let drawerEl: HTMLElement | undefined = $state();
 	&__group-arrow
 		display: flex
 		flex: none
-		transition: transform 350ms var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1))
+		transition: transform var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1))
 		> :global(svg)
 			width: 1.25rem
 			height: 1.25rem
@@ -386,8 +481,8 @@ let drawerEl: HTMLElement | undefined = $state();
 		padding: 4px 0 8px
 		transform-origin: top center
 		animation:
-			drawer-group-spatial 380ms var(--m3e-easing-spring, cubic-bezier(0.34, 1.56, 0.64, 1)),
-			drawer-group-effects 200ms var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1))
+			drawer-group-spatial var(--m3e-duration-spring-fast, 340ms) var(--m3e-easing-spring-fast, cubic-bezier(0.34, 1.38, 0.64, 1)),
+			drawer-group-effects var(--m3e-duration-effects-default, 220ms) var(--m3e-easing-effects-default, cubic-bezier(0.05, 0.7, 0.1, 1))
 
 @keyframes drawer-group-spatial
 	from

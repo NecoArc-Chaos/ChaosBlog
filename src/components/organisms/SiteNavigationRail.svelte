@@ -35,6 +35,7 @@ const railItems = railEntries.map(({ value, label, icon }) => ({
 }));
 
 let activeValue = $state("");
+let drawerOpen = $state(false);
 
 function syncFromRoute() {
 	const pageKey = resolvePageKey(new URL(window.location.href));
@@ -72,16 +73,27 @@ function handleValueChange(nextValue: string) {
 
 onMount(() => {
 	syncFromRoute();
+	const onDrawerState = (event: Event) => {
+		const detail = (event as CustomEvent<{ open?: boolean }>).detail;
+		drawerOpen = Boolean(detail?.open);
+	};
+	document.addEventListener("site-drawer:state", onDrawerState);
 	document.addEventListener("swup:content:replace", syncFromRoute);
 	window.addEventListener("popstate", syncFromRoute);
 	return () => {
+		document.removeEventListener("site-drawer:state", onDrawerState);
 		document.removeEventListener("swup:content:replace", syncFromRoute);
 		window.removeEventListener("popstate", syncFromRoute);
 	};
 });
 </script>
 
-<aside class="site-nav-rail" aria-label={i18n(I18nKey.mainNavigation)}>
+<aside
+	id="site-nav-rail"
+	class="site-nav-rail"
+	class:site-nav-rail--receded={drawerOpen}
+	aria-label={i18n(I18nKey.mainNavigation)}
+>
 	<NavigationRail
 		items={railItems}
 		bind:value={() => activeValue, handleValueChange}
@@ -104,8 +116,16 @@ onMount(() => {
 	scrollbar-width: none
 	background: var(--surface)
 	box-shadow: var(--m3e-elevation-1)
+	transition:
+		opacity 240ms var(--m3e-easing-effects-default, cubic-bezier(0.05, 0.7, 0.1, 1)),
+		transform 280ms var(--m3e-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1))
 	&::-webkit-scrollbar
 		display: none
+
+	&--receded
+		opacity: 0.38
+		transform: translateX(-8px)
+		pointer-events: none
 
 	@media (min-width: bp-sm) and (max-width: bp-lg - 1px)
 		display: flex
